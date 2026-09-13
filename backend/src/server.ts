@@ -1,3 +1,5 @@
+// This is the server entry file
+
 import "dotenv/config";
 
 import app from "./app.js";
