@@ -1,0 +1,4176 @@
+{
+  "info": {
+    "_postman_id": "d22d9f21-79f1-4768-a270-3ef8e348452d",
+    "name": "Neptune Holidays API",
+    "description": "API collection for Neptune Holidays Backend",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "36837380"
+  },
+  "item": [
+    {
+      "name": "User",
+      "item": [
+        {
+          "name": "Authentication",
+          "item": [
+            {
+              "name": "Register",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"password123\",\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"phone\": \"+1234567890\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/user/auth/register",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "user",
+                    "auth",
+                    "register"
+                  ]
+                },
+                "description": "Register a new user account"
+              },
+              "response": []
+            },
+            {
+              "name": "Login",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "var jsonData = pm.response.json();",
+                      "if (jsonData && jsonData.token) {",
+                      "    pm.environment.set(\"userToken\", jsonData.token);",
+                      "}"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"password123\",\n  \"forceLogin\": false\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/user/auth/login",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "user",
+                    "auth",
+                    "login"
+                  ]
+                },
+                "description": "Login a user, with optional force login parameter"
+              },
+              "response": []
+            },
+            {
+              "name": "Logout",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{userToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/user/auth/logout",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "user",
+                    "auth",
+                    "logout"
+                  ]
+                },
+                "description": "Logout the current user, invalidating their session"
+              },
+              "response": []
+            },
+            {
+              "name": "Get Current User",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{userToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/user/auth/me",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "user",
+                    "auth",
+                    "me"
+                  ]
+                },
+                "description": "Retrieve the current user's profile information"
+              },
+              "response": []
+            }
+          ],
+          "description": "User authentication endpoints"
+        },
+        {
+          "name": "Session Management",
+          "item": [
+            {
+              "name": "Force Login (When Already Logged In)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "var jsonData = pm.response.json();",
+                      "if (jsonData && jsonData.token) {",
+                      "    pm.environment.set(\"userToken\", jsonData.token);",
+                      "}"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"password123\",\n  \"forceLogin\": true\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/user/auth/login",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "user",
+                    "auth",
+                    "login"
+                  ]
+                },
+                "description": "Login a user when they already have an active session, forcing the previous session to terminate"
+              },
+              "response": []
+            }
+          ],
+          "description": "User session management endpoints"
+        },
+        {
+          "name": "Flight",
+          "item": [
+            {
+              "name": "Departures",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"keyword\": \"\" //oneWay or return\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}user/airports/departures",
+                  "host": [
+                    "{{baseUrl}}user"
+                  ],
+                  "path": [
+                    "airports",
+                    "departures"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Arrivals",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"departureAirportId\": \"8ecd0762-aef5-41c8-9690-49d6722a0821\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}user/airports/arrivals",
+                  "host": [
+                    "{{baseUrl}}user"
+                  ],
+                  "path": [
+                    "airports",
+                    "arrivals"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Oneway Dates",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"departureAirportId\": \"8ecd0762-aef5-41c8-9690-49d6722a0821\",\n    \"arrivalAirportId\": \"cd35a970-f74c-4074-a901-822f0d6b5a8f\",\n    \"isReturn\": false\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}user/airports/oneway-dates",
+                  "host": [
+                    "{{baseUrl}}user"
+                  ],
+                  "path": [
+                    "airports",
+                    "oneway-dates"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Return Dates",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"departureDate\": \"2027-09-01\",\n    \"departureAirportId\": \"8ecd0762-aef5-41c8-9690-49d6722a0821\",\n    \"arrivalAirportId\": \"cd35a970-f74c-4074-a901-822f0d6b5a8f\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}user/airports/return-dates",
+                  "host": [
+                    "{{baseUrl}}user"
+                  ],
+                  "path": [
+                    "airports",
+                    "return-dates"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Search Flights",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"departureAirportId\": \"8ecd0762-aef5-41c8-9690-49d6722a0821\",\n    \"arrivalAirportId\": \"cd35a970-f74c-4074-a901-822f0d6b5a8f\",\n    \"departureDate\": \"2027-09-01\",\n    \"returnDate\": \"\",\n    \"tripType\": \"oneWay\", //oneWay or return\n    \"passengers\": {\n        \"adult\": 3,\n        \"child\": 1,\n        \"infant\": 3\n    },\n    \"cabinClass\": \"ECONOMY\",\n    \"flexibleDates\": false,\n    \"directFlightsOnly\": false,\n    \"filters\": {\n        \"stops\": [\n            \"Non-Stop\",\n            \"One Stop\"\n        ],\n        \"airlines\": []\n        // \"departureTime\": [\n        //     \"Before 6 Am\",\n        //     \"6 Am - 12 Pm\",\n        //     \"12 Pm - 6 Pm\",\n        //     \"After 6 Pm\"\n        // ],\n        // \"arrivalTime\": [\n        //     \"Before 6 Am\",\n        //     \"6 Am - 12 Pm\",\n        //     \"12 Pm - 6 Pm\",\n        //     \"After 6 Pm\"\n        // ]\n    }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}user/airports/search-flights",
+                  "host": [
+                    "{{baseUrl}}user"
+                  ],
+                  "path": [
+                    "airports",
+                    "search-flights"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Flight Filters",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"departureAirportId\": \"4213a9c8-54a8-4e76-936e-eca20b9c988b\",\n    \"arrivalAirportId\": \"de79aa31-f417-4d20-8249-14bbbcf93da8\",\n    \"departureDate\": \"2025-06-02\",\n    \"returnDate\": \"\",\n    \"tripType\": \"oneWay\",\n    \"passengers\": {\n        \"adult\": 3,\n        \"child\": 1,\n        \"infant\": 3\n    },\n    \"cabinClass\": \"ECONOMY\",\n    \"flexibleDates\": false,\n    \"directFlightsOnly\": false\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}user/airports/flight-filters",
+                  "host": [
+                    "{{baseUrl}}user"
+                  ],
+                  "path": [
+                    "airports",
+                    "flight-filters"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Send Booking Request",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"outboundFlightInventoryId\": \"38353cf9-3948-46b3-ac95-9e7fd65593c5\",\n  \"outboundDate\": \"2025-06-01T00:00:00.000Z\",\n  \"returnFlightInventoryId\": null,\n  \"returnDate\": null,\n  \"tripType\": \"oneWay\", //return and oneWay\n  \"totalAmount\": 688.6999999999999,\n  \"currencyCode\": \"INR\",\n  \"contactFullName\": \"John Doe\",\n  \"contactEmail\": \"john.doe@example.com\",\n  \"contactPhone\": \"+12345678901\",\n  \"adultCount\": 2,\n  \"childCount\": 1,\n  \"infantCount\": 1,\n  \"travelersData\": [\n    {\n      \"type\": \"ADULT\",\n      \"title\": \"Mr\",\n      \"firstName\": \"John\",\n      \"lastName\": \"Doe\",\n      \"dob\": \"\",\n      \"nationality\": \"\",\n      \"passportNumber\": \"\",\n      \"passportExpiryDate\": null\n    },\n    {\n      \"type\": \"ADULT\",\n      \"title\": \"Mrs\",\n      \"firstName\": \"Jane\",\n      \"lastName\": \"Doe\",\n      \"dob\": \"1987-08-22\",\n      \"nationality\": \"US\",\n      \"passportNumber\": \"987654321\",\n      \"passportExpiryDate\": \"2031-05-20\"\n    },\n    {\n      \"type\": \"CHILD\",\n      \"title\": \"Mstr\",\n      \"firstName\": \"Tim\",\n      \"lastName\": \"Doe\",\n      \"dob\": \"2015-09-10\",\n      \"nationality\": \"US\",\n      \"passportNumber\": \"CH1234567\",\n      \"passportExpiryDate\": \"2031-09-10\"\n    },\n    {\n      \"type\": \"INFANT\",\n      \"title\": \"Miss\",\n      \"firstName\": \"Lily\",\n      \"lastName\": \"Doe\",\n      \"dob\": \"2024-09-01\",\n      \"nationality\": \"US\",\n      \"passportNumber\": \"IN1234567\",\n      \"passportExpiryDate\": \"2029-09-01\"\n    }\n  ],\n  \"specialRequests\": \"Vegetarian meal for all travelers\",\n  \"cabinClass\": \"ECONOMY\",\n  \"source\": \"WEB\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}user/flight-booking-requests",
+                  "host": [
+                    "{{baseUrl}}user"
+                  ],
+                  "path": [
+                    "flight-booking-requests"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ],
+      "description": "User-related endpoints"
+    },
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "Authentication",
+          "item": [
+            {
+              "name": "1. Login",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "var jsonData = pm.response.json();",
+                      "if (jsonData) {",
+                      "    pm.collectionVariables.set(\"adminSessionId\", jsonData.sessionId);",
+                      "    pm.collectionVariables.set(\"adminLoggedInEmail\", jsonData.email);",
+                      "}"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"spectraxcodes07@gmail.com\",\n  \"password\": \"P@ssw0rd123\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/admin/auth/login/initiate",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "auth",
+                    "login",
+                    "initiate"
+                  ]
+                },
+                "description": "Admin login endpoint"
+              },
+              "response": []
+            },
+            {
+              "name": "2. Verify OTP Login",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "var jsonData = pm.response.json();",
+                      "if (jsonData && jsonData.token) {",
+                      "    pm.collectionVariables.set(\"adminToken\", jsonData.token);",
+                      "}"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"{{adminLoggedInEmail}}\",\n  \"otp\": \"195614\",\n  \"sessionId\": \"{{adminSessionId}}\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/admin/auth/login/verify-otp",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "auth",
+                    "login",
+                    "verify-otp"
+                  ]
+                },
+                "description": "Admin login endpoint"
+              },
+              "response": []
+            },
+            {
+              "name": "3. Resend login OTP",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"{{adminLoggedInEmail}}\",\n  \"sessionId\": \"{{adminSessionId}}\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/admin/auth/login/resend-otp",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "auth",
+                    "login",
+                    "resend-otp"
+                  ]
+                },
+                "description": "Admin login endpoint"
+              },
+              "response": []
+            },
+            {
+              "name": "Forgot Password",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "var jsonData = pm.response.json();",
+                      "if (jsonData && jsonData.token) {",
+                      "    pm.collectionVariables.set(\"adminToken\", jsonData.token);",
+                      "}"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"email\": \"spectraxcodes07@gmail.com\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/admin/auth/forgot-password",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "auth",
+                    "forgot-password"
+                  ]
+                },
+                "description": "Admin login endpoint"
+              },
+              "response": []
+            },
+            {
+              "name": "Reset Password",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "var jsonData = pm.response.json();",
+                      "if (jsonData && jsonData.token) {",
+                      "    pm.collectionVariables.set(\"adminToken\", jsonData.token);",
+                      "}"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"token\": \"050825c8464feac5d839c43062c7a5195b9d1a8d8cb27b1ef41d498beb8b6c3b\",\n    \"password\": \"Subrata@25\",\n    \"confirmPassword\": \"Subrata@25\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/admin/auth/reset-password",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "auth",
+                    "reset-password"
+                  ]
+                },
+                "description": "Admin login endpoint"
+              },
+              "response": []
+            },
+            {
+              "name": "Logout",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/admin/auth/logout",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "auth",
+                    "logout"
+                  ]
+                },
+                "description": "Admin logout endpoint"
+              },
+              "response": []
+            },
+            {
+              "name": "Get Current Admin",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/admin/auth/me",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "auth",
+                    "me"
+                  ]
+                },
+                "description": "Get the current admin's profile"
+              },
+              "response": []
+            }
+          ],
+          "description": "Admin authentication endpoints"
+        },
+        {
+          "name": "Session Management",
+          "item": [
+            {
+              "name": "Force Login (When Already Logged In)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "var jsonData = pm.response.json();",
+                      "if (jsonData && jsonData.token) {",
+                      "    pm.collectionVariables.set(\"adminToken\", jsonData.token);",
+                      "}"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"admin@example.com\",\n  \"password\": \"password123\",\n  \"forceLogin\": true\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/admin/auth/login",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "auth",
+                    "login"
+                  ]
+                },
+                "description": "Login as an admin when they already have an active session, forcing the previous session to terminate"
+              },
+              "response": []
+            }
+          ],
+          "description": "Admin session management endpoints"
+        },
+        {
+          "name": "Roles",
+          "item": [
+            {
+              "name": "Get All Roles",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/admin/roles",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "roles"
+                  ]
+                },
+                "description": "Get all roles"
+              },
+              "response": []
+            },
+            {
+              "name": "Get Role By ID",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/admin/roles/5b7b6425-7017-4568-b73e-ad40a2c79606",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "roles",
+                    "5b7b6425-7017-4568-b73e-ad40a2c79606"
+                  ]
+                },
+                "description": "Get role by ID"
+              },
+              "response": []
+            },
+            {
+              "name": "Create Role",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Manager 14\",\n  \"description\": \"Site manager role\",\n  \"permissionIds\": [\"5b7b6425-7017-4568-b73e-ad40a2c79606\"]\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/admin/roles",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "roles"
+                  ]
+                },
+                "description": "Create a new role"
+              },
+              "response": []
+            },
+            {
+              "name": "Update Role",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Admin\",\n  \"description\": \"Administrator with limited permissions\",\n  \"permissionIds\": [\"3303125a-43f9-4476-9404-d71123f814d6\", \"dd7acae0-209d-428c-8f6e-d283a83e9838\"]\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/admin/roles/5b7b6425-7017-4568-b73e-ad40a2c79606",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "roles",
+                    "5b7b6425-7017-4568-b73e-ad40a2c79606"
+                  ]
+                },
+                "description": "Update a role by ID"
+              },
+              "response": []
+            },
+            {
+              "name": "Delete Role",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/admin/roles/1af85625-d626-4998-bf4b-7abd2feec7bc",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "roles",
+                    "1af85625-d626-4998-bf4b-7abd2feec7bc"
+                  ]
+                },
+                "description": "Delete a role by ID"
+              },
+              "response": []
+            }
+          ],
+          "description": "Admin role management endpoints"
+        },
+        {
+          "name": "Permissions",
+          "item": [
+            {
+              "name": "Get All Permissions",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/admin/permissions",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "permissions"
+                  ]
+                },
+                "description": "Get all permissions"
+              },
+              "response": []
+            },
+            {
+              "name": "Get All Permissions Modules",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/admin/permissions/modules",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "permissions",
+                    "modules"
+                  ]
+                },
+                "description": "Get all permissions"
+              },
+              "response": []
+            },
+            {
+              "name": "Get Permission By ID",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/admin/permissions/3303125a-43f9-4476-9404-d71123f814d6",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "permissions",
+                    "3303125a-43f9-4476-9404-d71123f814d6"
+                  ]
+                },
+                "description": "Get permission by ID"
+              },
+              "response": []
+            },
+            {
+              "name": "Create Permission",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"name\": \"Adios\",\n    \"description\": \"Manage bookings\",\n    \"code\": \"booking:manage\",\n    \"module\": \"Booking\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/admin/permissions",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "permissions"
+                  ]
+                },
+                "description": "Create a new permission"
+              },
+              "response": []
+            },
+            {
+              "name": "Update Permission",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"booking:full-manage\",\n  \"description\": \"Full booking management access\",\n  \"module\": \"Booking\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/admin/permissions/e4242799-0de6-400a-af57-4d03a373abfd",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "permissions",
+                    "e4242799-0de6-400a-af57-4d03a373abfd"
+                  ]
+                },
+                "description": "Update permission by ID"
+              },
+              "response": []
+            },
+            {
+              "name": "Delete Permission",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/admin/permissions/e4242799-0de6-400a-af57-4d03a373abfd",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "permissions",
+                    "e4242799-0de6-400a-af57-4d03a373abfd"
+                  ]
+                },
+                "description": "Delete permission by ID"
+              },
+              "response": []
+            }
+          ],
+          "description": "Permission management endpoints"
+        },
+        {
+          "name": "Sub admin",
+          "item": [
+            {
+              "name": "Get  Admins",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/admin/subAdmin?page=1&limit=10",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "subAdmin"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "10"
+                    }
+                  ]
+                },
+                "description": "Get all roles"
+              },
+              "response": []
+            },
+            {
+              "name": "Get Admin By ID",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/admin/subAdmin/5c3c1b83-90d4-40b4-8ec1-1f7fdab00086",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "subAdmin",
+                    "5c3c1b83-90d4-40b4-8ec1-1f7fdab00086"
+                  ]
+                },
+                "description": "Get role by ID"
+              },
+              "response": []
+            },
+            {
+              "name": "Create Admin",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"firstName\": \"Subrata\",\n    \"lastName\": \"Jana\",\n    \"email\": \"spectraxcodes08@gmail.com\",\n    \"roleId\": \"6a9cb762-9a6d-4138-b815-46920eda9a88\",\n    \"password\": \"TestPassword\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/admin/subAdmin",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "subAdmin"
+                  ]
+                },
+                "description": "Create a new role"
+              },
+              "response": []
+            },
+            {
+              "name": "Update Admin",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"firstName\": \"Subrata\",\n    \"lastName\": \"Jana\",\n    \"email\": \"spectraxcodes08@gmail.com\",\n    \"roleId\": \"6a9cb762-9a6d-4138-b815-46920eda9a88\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/admin/subAdmin/5c3c1b83-90d4-40b4-8ec1-1f7fdab00086",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "subAdmin",
+                    "5c3c1b83-90d4-40b4-8ec1-1f7fdab00086"
+                  ]
+                },
+                "description": "Update a role by ID"
+              },
+              "response": []
+            },
+            {
+              "name": "Delete Admin",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/admin/subAdmin/5c3c1b83-90d4-40b4-8ec1-1f7fdab00086",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "subAdmin",
+                    "5c3c1b83-90d4-40b4-8ec1-1f7fdab00086"
+                  ]
+                },
+                "description": "Delete a role by ID"
+              },
+              "response": []
+            }
+          ],
+          "description": "Admin role management endpoints"
+        },
+        {
+          "name": "Settings",
+          "item": [
+            {
+              "name": "Get System Settings",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/admin/settings",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "settings"
+                  ]
+                },
+                "description": "Get all system settings"
+              },
+              "response": []
+            },
+            {
+              "name": "Update System Settings",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"siteName\": \"Neptune Holidays\",\n  \"contactEmail\": \"support@neptuneholidays.com\",\n  \"maintenanceMode\": false\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/admin/settings",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "settings"
+                  ]
+                },
+                "description": "Update system settings"
+              },
+              "response": []
+            }
+          ],
+          "description": "System settings endpoints"
+        },
+        {
+          "name": "Reports",
+          "item": [
+            {
+              "name": "Get System Reports",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/admin/reports",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "reports"
+                  ]
+                },
+                "description": "Get system reports"
+              },
+              "response": []
+            }
+          ],
+          "description": "System reports endpoints"
+        },
+        {
+          "name": "Audit",
+          "item": [
+            {
+              "name": "Get Activity Logs",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/admin/audit?page=1&limit=10",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "audit"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "10"
+                    }
+                  ]
+                },
+                "description": "Get paginated activity logs"
+              },
+              "response": []
+            },
+            {
+              "name": "Get Entity Types",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/admin/audit/entity-types",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "audit",
+                    "entity-types"
+                  ]
+                },
+                "description": "Get all entity types for filtering audit logs"
+              },
+              "response": []
+            },
+            {
+              "name": "Get Actions",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/admin/audit/actions",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "audit",
+                    "actions"
+                  ]
+                },
+                "description": "Get all actions for filtering audit logs"
+              },
+              "response": []
+            },
+            {
+              "name": "Get Modules",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/admin/audit/modules",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "audit",
+                    "modules"
+                  ]
+                },
+                "description": "Get all modules for filtering audit logs"
+              },
+              "response": []
+            },
+            {
+              "name": "Get Modules Copy",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{adminToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/admin/audit/modules",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "audit",
+                    "modules"
+                  ]
+                },
+                "description": "Get all modules for filtering audit logs"
+              },
+              "response": []
+            }
+          ],
+          "description": "Audit and activity log endpoints"
+        },
+        {
+          "name": "Location",
+          "item": [
+            {
+              "name": "County or State",
+              "item": [
+                {
+                  "name": "Images",
+                  "item": [
+                    {
+                      "name": "Country Images",
+                      "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                          "raw": "{{baseUrl}}admin/locations/countries/b786eccf-c45d-4a59-8f6b-82714738d888/images",
+                          "host": [
+                            "{{baseUrl}}admin"
+                          ],
+                          "path": [
+                            "locations",
+                            "countries",
+                            "b786eccf-c45d-4a59-8f6b-82714738d888",
+                            "images"
+                          ]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "Upload Country Image",
+                      "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                          "mode": "formdata",
+                          "formdata": [
+                            {
+                              "key": "image",
+                              "type": "file",
+                              "src": "postman-cloud:///1ef3aa24-f1e3-4f30-92de-f1d1d84617e0"
+                            }
+                          ]
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}admin/locations/countries/b786eccf-c45d-4a59-8f6b-82714738d888/images",
+                          "host": [
+                            "{{baseUrl}}admin"
+                          ],
+                          "path": [
+                            "locations",
+                            "countries",
+                            "b786eccf-c45d-4a59-8f6b-82714738d888",
+                            "images"
+                          ]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "Image Details",
+                      "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                      },
+                      "request": {
+                        "method": "GET",
+                        "header": [],
+                        "body": {
+                          "mode": "formdata",
+                          "formdata": [
+                            {
+                              "key": "image",
+                              "type": "file",
+                              "src": "postman-cloud:///1ef3aa24-f1e3-4f30-92de-f1d1d84617e0"
+                            }
+                          ]
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}admin/locations/countries/b786eccf-c45d-4a59-8f6b-82714738d888/images/75cb4447-9aac-46ec-af71-9003a569ac92",
+                          "host": [
+                            "{{baseUrl}}admin"
+                          ],
+                          "path": [
+                            "locations",
+                            "countries",
+                            "b786eccf-c45d-4a59-8f6b-82714738d888",
+                            "images",
+                            "75cb4447-9aac-46ec-af71-9003a569ac92"
+                          ]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "Update Country Image",
+                      "request": {
+                        "method": "PATCH",
+                        "header": [],
+                        "body": {
+                          "mode": "formdata",
+                          "formdata": [
+                            {
+                              "key": "image",
+                              "type": "file",
+                              "value": null
+                            },
+                            {
+                              "key": "isDefault",
+                              "value": "true",
+                              "type": "text"
+                            },
+                            {
+                              "key": "displayOrder",
+                              "value": "1",
+                              "type": "text"
+                            }
+                          ]
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}admin/locations/countries/b786eccf-c45d-4a59-8f6b-82714738d888/images/70337704-e145-493c-83da-07ef276bd2d4",
+                          "host": [
+                            "{{baseUrl}}admin"
+                          ],
+                          "path": [
+                            "locations",
+                            "countries",
+                            "b786eccf-c45d-4a59-8f6b-82714738d888",
+                            "images",
+                            "70337704-e145-493c-83da-07ef276bd2d4"
+                          ]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "Delete Country Image",
+                      "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "body": {
+                          "mode": "formdata",
+                          "formdata": [
+                            {
+                              "key": "image",
+                              "type": "file",
+                              "value": null
+                            },
+                            {
+                              "key": "isDefault",
+                              "value": "true",
+                              "type": "text"
+                            },
+                            {
+                              "key": "displayOrder",
+                              "value": "1",
+                              "type": "text"
+                            }
+                          ]
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}admin/locations/countries/b786eccf-c45d-4a59-8f6b-82714738d888/images/70337704-e145-493c-83da-07ef276bd2d4",
+                          "host": [
+                            "{{baseUrl}}admin"
+                          ],
+                          "path": [
+                            "locations",
+                            "countries",
+                            "b786eccf-c45d-4a59-8f6b-82714738d888",
+                            "images",
+                            "70337704-e145-493c-83da-07ef276bd2d4"
+                          ]
+                        }
+                      },
+                      "response": []
+                    }
+                  ]
+                },
+                {
+                  "name": "General Info / Place of Interest",
+                  "item": [
+                    {
+                      "name": "Fetch List",
+                      "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                          "raw": "{{baseUrl}}admin/locations/countries/b786eccf-c45d-4a59-8f6b-82714738d888/info?type=general",
+                          "host": [
+                            "{{baseUrl}}admin"
+                          ],
+                          "path": [
+                            "locations",
+                            "countries",
+                            "b786eccf-c45d-4a59-8f6b-82714738d888",
+                            "info"
+                          ],
+                          "query": [
+                            {
+                              "key": "type",
+                              "value": "general",
+                              "description": "general or intrerest"
+                            }
+                          ]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "Add",
+                      "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n    \"title\": \"Capital\",\n    \"value\": \"Thimphu\",\n    \"infoType\": \"general\"\n}",
+                          "options": {
+                            "raw": {
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}admin/locations/countries/b786eccf-c45d-4a59-8f6b-82714738d888/info",
+                          "host": [
+                            "{{baseUrl}}admin"
+                          ],
+                          "path": [
+                            "locations",
+                            "countries",
+                            "b786eccf-c45d-4a59-8f6b-82714738d888",
+                            "info"
+                          ]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "Details by ID",
+                      "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                      },
+                      "request": {
+                        "method": "GET",
+                        "header": [],
+                        "body": {
+                          "mode": "formdata",
+                          "formdata": [
+                            {
+                              "key": "image",
+                              "type": "file",
+                              "src": "postman-cloud:///1ef3aa24-f1e3-4f30-92de-f1d1d84617e0"
+                            }
+                          ]
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}admin/locations/countries/b786eccf-c45d-4a59-8f6b-82714738d888/info/9edae58e-2ca5-4fa0-bfea-9678d02fb59a",
+                          "host": [
+                            "{{baseUrl}}admin"
+                          ],
+                          "path": [
+                            "locations",
+                            "countries",
+                            "b786eccf-c45d-4a59-8f6b-82714738d888",
+                            "info",
+                            "9edae58e-2ca5-4fa0-bfea-9678d02fb59a"
+                          ]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "Update",
+                      "request": {
+                        "method": "PATCH",
+                        "header": [],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n    \"title\": \"Capital\",\n    \"value\": \"Thimphu\",\n    \"infoType\": \"general\",\n    \"displayOrder\": \"5\"\n}",
+                          "options": {
+                            "raw": {
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}admin/locations/countries/b786eccf-c45d-4a59-8f6b-82714738d888/info/f417b7d3-fe16-4efb-9bed-309433709507",
+                          "host": [
+                            "{{baseUrl}}admin"
+                          ],
+                          "path": [
+                            "locations",
+                            "countries",
+                            "b786eccf-c45d-4a59-8f6b-82714738d888",
+                            "info",
+                            "f417b7d3-fe16-4efb-9bed-309433709507"
+                          ]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "Delete",
+                      "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "body": {
+                          "mode": "formdata",
+                          "formdata": [
+                            {
+                              "key": "image",
+                              "type": "file",
+                              "value": null
+                            },
+                            {
+                              "key": "isDefault",
+                              "value": "true",
+                              "type": "text"
+                            },
+                            {
+                              "key": "displayOrder",
+                              "value": "1",
+                              "type": "text"
+                            }
+                          ]
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}admin/locations/countries/b786eccf-c45d-4a59-8f6b-82714738d888/info/f417b7d3-fe16-4efb-9bed-309433709507",
+                          "host": [
+                            "{{baseUrl}}admin"
+                          ],
+                          "path": [
+                            "locations",
+                            "countries",
+                            "b786eccf-c45d-4a59-8f6b-82714738d888",
+                            "info",
+                            "f417b7d3-fe16-4efb-9bed-309433709507"
+                          ]
+                        }
+                      },
+                      "response": []
+                    }
+                  ]
+                },
+                {
+                  "name": "Get Country/State List",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseUrl}}admin/locations/countries",
+                      "host": [
+                        "{{baseUrl}}admin"
+                      ],
+                      "path": [
+                        "locations",
+                        "countries"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Get Country/State By ID",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseUrl}}admin/locations/countries/b786eccf-c45d-4a59-8f6b-82714738d888",
+                      "host": [
+                        "{{baseUrl}}admin"
+                      ],
+                      "path": [
+                        "locations",
+                        "countries",
+                        "b786eccf-c45d-4a59-8f6b-82714738d888"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Add Country/State",
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n    \"name\": \"India\"\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}admin/locations/countries",
+                      "host": [
+                        "{{baseUrl}}admin"
+                      ],
+                      "path": [
+                        "locations",
+                        "countries"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Update Country/State",
+                  "request": {
+                    "method": "PATCH",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n    \"name\": \"Bhutan\",\n    \"description\": \"Bhutan, the Land of the Thunder Dragon, is a small Himalayan kingdom known for its stunning landscapes, rich culture, and Gross National Happiness philosophy. The country embraces sustainable tourism, preserving its Buddhist heritage and pristine environment. Thimphu, the capital, blends tradition with modernity, while Paro is home to the iconic Tiger’s Nest Monastery. Bhutan’s dzongs, prayer flags, and festivals showcase its deep spirituality. The country strictly controls tourism to maintain its unique identity. Trekking, monasteries, and serene valleys attract travelers seeking peace and adventure. Bhutanese cuisine features dishes like Ema Datshi (chili cheese). Visitors require permits for entry.\",\n    \"howToReach\": \"Bhutan is accessible by air and land. **By Air**, Paro International Airport (PBH) is the only international airport, with flights from India, Nepal, Thailand, and Singapore via Druk Air and Bhutan Airlines. **By Land**, entry is possible through India via Phuentsholing, Gelephu, and Samdrup Jongkhar border points.\",\n    \"isActive\": true\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}admin/locations/countries/b786eccf-c45d-4a59-8f6b-82714738d888",
+                      "host": [
+                        "{{baseUrl}}admin"
+                      ],
+                      "path": [
+                        "locations",
+                        "countries",
+                        "b786eccf-c45d-4a59-8f6b-82714738d888"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Delete Country/State",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "body": {
+                      "mode": "formdata",
+                      "formdata": [
+                        {
+                          "key": "name",
+                          "value": "Indiaa",
+                          "type": "text"
+                        },
+                        {
+                          "key": "image",
+                          "type": "file",
+                          "src": "postman-cloud:///1ef3aa24-f1e3-4f30-92de-f1d1d84617e0"
+                        }
+                      ]
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}admin/locations/countries/4214ed8a-4295-43cc-8637-af3c3cf0e007",
+                      "host": [
+                        "{{baseUrl}}admin"
+                      ],
+                      "path": [
+                        "locations",
+                        "countries",
+                        "4214ed8a-4295-43cc-8637-af3c3cf0e007"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "Cities",
+              "item": [
+                {
+                  "name": "Get City List",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseUrl}}admin/locations/cities",
+                      "host": [
+                        "{{baseUrl}}admin"
+                      ],
+                      "path": [
+                        "locations",
+                        "cities"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Add City",
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "formdata",
+                      "formdata": [
+                        {
+                          "key": "name",
+                          "value": "Kolkata",
+                          "type": "text"
+                        },
+                        {
+                          "key": "countryId",
+                          "value": "13ccb11a-b1f5-43d3-ba28-a0e0f6e93916",
+                          "type": "text"
+                        },
+                        {
+                          "key": "image",
+                          "type": "file",
+                          "src": "postman-cloud:///1ef3aa24-f1e3-4f30-92de-f1d1d84617e0"
+                        }
+                      ]
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}admin/locations/cities",
+                      "host": [
+                        "{{baseUrl}}admin"
+                      ],
+                      "path": [
+                        "locations",
+                        "cities"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Get City By ID",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseUrl}}/api/v1/admin/locations/cities/cb41c3f1-7e7e-481d-a4c4-945eb952d0dd",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "locations",
+                        "cities",
+                        "cb41c3f1-7e7e-481d-a4c4-945eb952d0dd"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Update City",
+                  "request": {
+                    "method": "PATCH",
+                    "header": [],
+                    "body": {
+                      "mode": "formdata",
+                      "formdata": [
+                        {
+                          "key": "name",
+                          "value": "Indiaa",
+                          "type": "text"
+                        },
+                        {
+                          "key": "countryId",
+                          "value": "13ccb11a-b1f5-43d3-ba28-a0e0f6e93916",
+                          "type": "text"
+                        },
+                        {
+                          "key": "image",
+                          "type": "file",
+                          "src": "postman-cloud:///1ef3aa24-f1e3-4f30-92de-f1d1d84617e0"
+                        }
+                      ]
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/api/v1/admin/locations/cities/cb41c3f1-7e7e-481d-a4c4-945eb952d0dd",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "locations",
+                        "cities",
+                        "cb41c3f1-7e7e-481d-a4c4-945eb952d0dd"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Delete City",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "body": {
+                      "mode": "formdata",
+                      "formdata": [
+                        {
+                          "key": "name",
+                          "value": "Indiaa",
+                          "type": "text"
+                        },
+                        {
+                          "key": "image",
+                          "type": "file",
+                          "src": "postman-cloud:///1ef3aa24-f1e3-4f30-92de-f1d1d84617e0"
+                        }
+                      ]
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/api/v1/admin/locations/cities/cb41c3f1-7e7e-481d-a4c4-945eb952d0dd",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "admin",
+                        "locations",
+                        "cities",
+                        "cb41c3f1-7e7e-481d-a4c4-945eb952d0dd"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Amenities",
+          "item": [
+            {
+              "name": "Hotel Amenities",
+              "item": [
+                {
+                  "name": "Amenity",
+                  "item": [
+                    {
+                      "name": "Get Amenities",
+                      "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                          "raw": "{{baseUrl}}admin/amenities",
+                          "host": [
+                            "{{baseUrl}}admin"
+                          ],
+                          "path": [
+                            "amenities"
+                          ]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "Add Amenity",
+                      "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                          "mode": "formdata",
+                          "formdata": [
+                            {
+                              "key": "name",
+                              "value": "Air Conditioning",
+                              "type": "text"
+                            },
+                            {
+                              "key": "categoryId",
+                              "value": "6507c3dc-afe7-40ee-b548-5f7e43471b51",
+                              "type": "text"
+                            }
+                          ]
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}admin/amenities",
+                          "host": [
+                            "{{baseUrl}}admin"
+                          ],
+                          "path": [
+                            "amenities"
+                          ]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "Get Aminity By ID",
+                      "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                          "raw": "{{baseUrl}}admin/amenities/647570dc-9e67-450b-8661-f33e167b98d8",
+                          "host": [
+                            "{{baseUrl}}admin"
+                          ],
+                          "path": [
+                            "amenities",
+                            "647570dc-9e67-450b-8661-f33e167b98d8"
+                          ]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "Update Amenity",
+                      "request": {
+                        "method": "PATCH",
+                        "header": [],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n    \"name\": \"Air Conditioning\",\n    \"categoryId\": \"b0f8cfd4-1b4f-4b74-a9aa-e3285995cfae\",\n    \"displayOrder\": \"1\",\n    \"isActive\": true\n}",
+                          "options": {
+                            "raw": {
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}admin/amenities/647570dc-9e67-450b-8661-f33e167b98d8",
+                          "host": [
+                            "{{baseUrl}}admin"
+                          ],
+                          "path": [
+                            "amenities",
+                            "647570dc-9e67-450b-8661-f33e167b98d8"
+                          ]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "Delete Amenity Category",
+                      "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n    \"name\": \"Mandatory\",\n    \"displayOrder\": \"1\",\n    \"isActive\": true\n}",
+                          "options": {
+                            "raw": {
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}admin/amenities/647570dc-9e67-450b-8661-f33e167b98d8",
+                          "host": [
+                            "{{baseUrl}}admin"
+                          ],
+                          "path": [
+                            "amenities",
+                            "647570dc-9e67-450b-8661-f33e167b98d8"
+                          ]
+                        }
+                      },
+                      "response": []
+                    }
+                  ]
+                },
+                {
+                  "name": "Category",
+                  "item": [
+                    {
+                      "name": "Get Amenity Categories",
+                      "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                          "raw": "{{baseUrl}}admin/amenities/categories",
+                          "host": [
+                            "{{baseUrl}}admin"
+                          ],
+                          "path": [
+                            "amenities",
+                            "categories"
+                          ]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "Add Amenity Categopries",
+                      "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n    \"name\": \"Mandatory\"\n}",
+                          "options": {
+                            "raw": {
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}admin/amenities/categories",
+                          "host": [
+                            "{{baseUrl}}admin"
+                          ],
+                          "path": [
+                            "amenities",
+                            "categories"
+                          ]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "Get Aminity Category By ID",
+                      "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                          "raw": "{{baseUrl}}admin/amenities/categories/b0f8cfd4-1b4f-4b74-a9aa-e3285995cfae",
+                          "host": [
+                            "{{baseUrl}}admin"
+                          ],
+                          "path": [
+                            "amenities",
+                            "categories",
+                            "b0f8cfd4-1b4f-4b74-a9aa-e3285995cfae"
+                          ]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "Update Amenity Category",
+                      "request": {
+                        "method": "PATCH",
+                        "header": [],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n    \"name\": \"Mandatory\",\n    \"displayOrder\": \"1\",\n    \"isActive\": true\n}",
+                          "options": {
+                            "raw": {
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}admin/amenities/categories/ce8760b6-afb4-4a56-bfba-295600ac2a87",
+                          "host": [
+                            "{{baseUrl}}admin"
+                          ],
+                          "path": [
+                            "amenities",
+                            "categories",
+                            "ce8760b6-afb4-4a56-bfba-295600ac2a87"
+                          ]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "Delete Amenity Category",
+                      "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n    \"name\": \"Mandatory\",\n    \"displayOrder\": \"1\",\n    \"isActive\": true\n}",
+                          "options": {
+                            "raw": {
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}admin/amenities/categories/ce8760b6-afb4-4a56-bfba-295600ac2a87",
+                          "host": [
+                            "{{baseUrl}}admin"
+                          ],
+                          "path": [
+                            "amenities",
+                            "categories",
+                            "ce8760b6-afb4-4a56-bfba-295600ac2a87"
+                          ]
+                        }
+                      },
+                      "response": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "Room Amenities",
+              "item": [
+                {
+                  "name": "Amenity",
+                  "item": [
+                    {
+                      "name": "Get Amenities",
+                      "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                          "raw": "{{baseUrl}}admin/room-amenities",
+                          "host": [
+                            "{{baseUrl}}admin"
+                          ],
+                          "path": [
+                            "room-amenities"
+                          ]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "Add Amenity",
+                      "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                          "mode": "formdata",
+                          "formdata": [
+                            {
+                              "key": "name",
+                              "value": "Air Conditioning",
+                              "type": "text"
+                            },
+                            {
+                              "key": "categoryId",
+                              "value": "9d80538f-c601-41f6-bff6-f6ccd0708603",
+                              "type": "text"
+                            }
+                          ]
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}admin/room-amenities",
+                          "host": [
+                            "{{baseUrl}}admin"
+                          ],
+                          "path": [
+                            "room-amenities"
+                          ]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "Get Aminity By ID",
+                      "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                          "raw": "{{baseUrl}}admin/room-amenities/f8c8c373-e356-424b-b8df-89c2c3e2eaf6",
+                          "host": [
+                            "{{baseUrl}}admin"
+                          ],
+                          "path": [
+                            "room-amenities",
+                            "f8c8c373-e356-424b-b8df-89c2c3e2eaf6"
+                          ]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "Update Amenity",
+                      "request": {
+                        "method": "PATCH",
+                        "header": [],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n    \"name\": \"Air Conditioning\",\n    \"categoryId\": \"b0f8cfd4-1b4f-4b74-a9aa-e3285995cfae\",\n    \"displayOrder\": \"1\",\n    \"isActive\": true\n}",
+                          "options": {
+                            "raw": {
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}admin/room-amenities/f8c8c373-e356-424b-b8df-89c2c3e2eaf6",
+                          "host": [
+                            "{{baseUrl}}admin"
+                          ],
+                          "path": [
+                            "room-amenities",
+                            "f8c8c373-e356-424b-b8df-89c2c3e2eaf6"
+                          ]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "Delete Amenity Category",
+                      "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n    \"name\": \"Mandatory\",\n    \"displayOrder\": \"1\",\n    \"isActive\": true\n}",
+                          "options": {
+                            "raw": {
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}admin/room-amenities/f8c8c373-e356-424b-b8df-89c2c3e2eaf6",
+                          "host": [
+                            "{{baseUrl}}admin"
+                          ],
+                          "path": [
+                            "room-amenities",
+                            "f8c8c373-e356-424b-b8df-89c2c3e2eaf6"
+                          ]
+                        }
+                      },
+                      "response": []
+                    }
+                  ]
+                },
+                {
+                  "name": "Category",
+                  "item": [
+                    {
+                      "name": "Get Amenity Categories",
+                      "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                          "raw": "{{baseUrl}}admin/room-amenities/categories",
+                          "host": [
+                            "{{baseUrl}}admin"
+                          ],
+                          "path": [
+                            "room-amenities",
+                            "categories"
+                          ]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "Add Amenity Categopries",
+                      "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n    \"name\": \"Mandatory\"\n}",
+                          "options": {
+                            "raw": {
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}admin/room-amenities/categories",
+                          "host": [
+                            "{{baseUrl}}admin"
+                          ],
+                          "path": [
+                            "room-amenities",
+                            "categories"
+                          ]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "Get Aminity Category By ID",
+                      "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                          "raw": "{{baseUrl}}admin/room-amenities/categories/9d80538f-c601-41f6-bff6-f6ccd0708603",
+                          "host": [
+                            "{{baseUrl}}admin"
+                          ],
+                          "path": [
+                            "room-amenities",
+                            "categories",
+                            "9d80538f-c601-41f6-bff6-f6ccd0708603"
+                          ]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "Update Amenity Category",
+                      "request": {
+                        "method": "PATCH",
+                        "header": [],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n    \"name\": \"Mandatory\",\n    \"displayOrder\": \"1\",\n    \"isActive\": true\n}",
+                          "options": {
+                            "raw": {
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}admin/room-amenities/categories/9d80538f-c601-41f6-bff6-f6ccd0708603",
+                          "host": [
+                            "{{baseUrl}}admin"
+                          ],
+                          "path": [
+                            "room-amenities",
+                            "categories",
+                            "9d80538f-c601-41f6-bff6-f6ccd0708603"
+                          ]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "Delete Amenity Category",
+                      "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n    \"name\": \"Mandatory\",\n    \"displayOrder\": \"1\",\n    \"isActive\": true\n}",
+                          "options": {
+                            "raw": {
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}admin/room-amenities/categories/9d80538f-c601-41f6-bff6-f6ccd0708603",
+                          "host": [
+                            "{{baseUrl}}admin"
+                          ],
+                          "path": [
+                            "room-amenities",
+                            "categories",
+                            "9d80538f-c601-41f6-bff6-f6ccd0708603"
+                          ]
+                        }
+                      },
+                      "response": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Flights",
+          "item": [
+            {
+              "name": "Airlines",
+              "item": [
+                {
+                  "name": "Get Airlines",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseUrl}}admin/airlines",
+                      "host": [
+                        "{{baseUrl}}admin"
+                      ],
+                      "path": [
+                        "airlines"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Create Airline",
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "formdata",
+                      "formdata": [
+                        {
+                          "key": "name",
+                          "value": "IndiGo",
+                          "type": "text"
+                        },
+                        {
+                          "key": "code",
+                          "value": "6E",
+                          "type": "text"
+                        },
+                        {
+                          "key": "country",
+                          "value": "India",
+                          "type": "text"
+                        },
+                        {
+                          "key": "logo",
+                          "type": "file",
+                          "src": "/home/web-wanderer/Downloads/person-gray-photo-placeholder-woman-vector-24138233.jpg"
+                        }
+                      ]
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}admin/airlines",
+                      "host": [
+                        "{{baseUrl}}admin"
+                      ],
+                      "path": [
+                        "airlines"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Get Airlines By ID",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseUrl}}admin/airlines/5531d6d6-5e8c-4c51-8dcb-be1a4d15a8da",
+                      "host": [
+                        "{{baseUrl}}admin"
+                      ],
+                      "path": [
+                        "airlines",
+                        "5531d6d6-5e8c-4c51-8dcb-be1a4d15a8da"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Update Airline",
+                  "request": {
+                    "method": "PATCH",
+                    "header": [],
+                    "body": {
+                      "mode": "formdata",
+                      "formdata": [
+                        {
+                          "key": "name",
+                          "value": "IndiGo",
+                          "type": "text"
+                        },
+                        {
+                          "key": "code",
+                          "value": "6E",
+                          "type": "text"
+                        },
+                        {
+                          "key": "country",
+                          "value": "India",
+                          "type": "text"
+                        },
+                        {
+                          "key": "logo",
+                          "type": "file",
+                          "value": null
+                        }
+                      ]
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}admin/airlines/5531d6d6-5e8c-4c51-8dcb-be1a4d15a8da",
+                      "host": [
+                        "{{baseUrl}}admin"
+                      ],
+                      "path": [
+                        "airlines",
+                        "5531d6d6-5e8c-4c51-8dcb-be1a4d15a8da"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Delete Airline",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseUrl}}admin/airlines/5531d6d6-5e8c-4c51-8dcb-be1a4d15a8da",
+                      "host": [
+                        "{{baseUrl}}admin"
+                      ],
+                      "path": [
+                        "airlines",
+                        "5531d6d6-5e8c-4c51-8dcb-be1a4d15a8da"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "Airports",
+              "item": [
+                {
+                  "name": "Get Airports",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseUrl}}admin/airports?limit=10&page=1",
+                      "host": [
+                        "{{baseUrl}}admin"
+                      ],
+                      "path": [
+                        "airports"
+                      ],
+                      "query": [
+                        {
+                          "key": "limit",
+                          "value": "10"
+                        },
+                        {
+                          "key": "page",
+                          "value": "1"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Create Airport",
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "formdata",
+                      "formdata": [
+                        {
+                          "key": "name",
+                          "value": "Jay Prakash Narayan Airport",
+                          "type": "text"
+                        },
+                        {
+                          "key": "code",
+                          "value": "PAT",
+                          "type": "text"
+                        },
+                        {
+                          "key": "country",
+                          "value": "India",
+                          "type": "text"
+                        },
+                        {
+                          "key": "city",
+                          "value": "Patna",
+                          "type": "text"
+                        },
+                        {
+                          "key": "latitude",
+                          "value": "25.5913",
+                          "type": "text"
+                        },
+                        {
+                          "key": "longitude",
+                          "value": "85.0880",
+                          "type": "text"
+                        },
+                        {
+                          "key": "timezone",
+                          "value": "Asia/Kolkata",
+                          "type": "text"
+                        },
+                        {
+                          "key": "isDpmestic",
+                          "value": "YES",
+                          "description": "YES or NO",
+                          "type": "text"
+                        },
+                        {
+                          "key": "isActive",
+                          "value": "true",
+                          "type": "text"
+                        },
+                        {
+                          "key": "image",
+                          "type": "file",
+                          "value": null
+                        }
+                      ]
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}admin/airports",
+                      "host": [
+                        "{{baseUrl}}admin"
+                      ],
+                      "path": [
+                        "airports"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Get Airport By ID",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseUrl}}admin/airports/93ee0f6d-f52d-4969-826f-63bb1018c470",
+                      "host": [
+                        "{{baseUrl}}admin"
+                      ],
+                      "path": [
+                        "airports",
+                        "93ee0f6d-f52d-4969-826f-63bb1018c470"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Update Airport",
+                  "request": {
+                    "method": "PATCH",
+                    "header": [],
+                    "body": {
+                      "mode": "formdata",
+                      "formdata": [
+                        {
+                          "key": "name",
+                          "value": "Singapore Changi Airport",
+                          "type": "text"
+                        },
+                        {
+                          "key": "code",
+                          "value": "SIN",
+                          "type": "text"
+                        },
+                        {
+                          "key": "country",
+                          "value": "Singapore",
+                          "type": "text"
+                        },
+                        {
+                          "key": "city",
+                          "value": "Singapore",
+                          "type": "text"
+                        },
+                        {
+                          "key": "latitude",
+                          "value": "1.364420",
+                          "type": "text"
+                        },
+                        {
+                          "key": "longitude",
+                          "value": "103.991531",
+                          "type": "text"
+                        },
+                        {
+                          "key": "timezone",
+                          "value": "Asia/Singapore",
+                          "type": "text"
+                        },
+                        {
+                          "key": "isDomestic",
+                          "value": "YES",
+                          "description": "YES or NO",
+                          "type": "text"
+                        },
+                        {
+                          "key": "isActive",
+                          "value": "true",
+                          "type": "text"
+                        },
+                        {
+                          "key": "image",
+                          "type": "file",
+                          "src": "/home/web-wanderer/Downloads/Singapore Changi Airport.webp"
+                        }
+                      ]
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}admin/airports/9642d6ea-852f-4063-9787-d2e7adcc563d",
+                      "host": [
+                        "{{baseUrl}}admin"
+                      ],
+                      "path": [
+                        "airports",
+                        "9642d6ea-852f-4063-9787-d2e7adcc563d"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Delete Airport",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseUrl}}admin/airports/93ee0f6d-f52d-4969-826f-63bb1018c470",
+                      "host": [
+                        "{{baseUrl}}admin"
+                      ],
+                      "path": [
+                        "airports",
+                        "93ee0f6d-f52d-4969-826f-63bb1018c470"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "Flight",
+              "item": [
+                {
+                  "name": "Get Flights",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseUrl}}admin/flights?search=Indigo",
+                      "host": [
+                        "{{baseUrl}}admin"
+                      ],
+                      "path": [
+                        "flights"
+                      ],
+                      "query": [
+                        {
+                          "key": "search",
+                          "value": "Indigo"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Get Flight By ID",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseUrl}}admin/flights/2557be44-65b5-4a34-aebb-24092a0278a4",
+                      "host": [
+                        "{{baseUrl}}admin"
+                      ],
+                      "path": [
+                        "flights",
+                        "2557be44-65b5-4a34-aebb-24092a0278a4"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Get baggage Allowances By ID",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseUrl}}admin/flights/2557be44-65b5-4a34-aebb-24092a0278a4/baggage-allowances",
+                      "host": [
+                        "{{baseUrl}}admin"
+                      ],
+                      "path": [
+                        "flights",
+                        "2557be44-65b5-4a34-aebb-24092a0278a4",
+                        "baggage-allowances"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Create Flight",
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n    \"flightNumber\": \"AI214\",\n    \"airlineId\": \"45450d47-b06c-4cec-a3cd-a883c7ce9730\", // From Airline dropdown API\n    \"departureAirportId\": \"8ecd0762-aef5-41c8-9690-49d6722a0821\", // From Airport dropdown API\n    \"arrivalAirportId\": \"cd35a970-f74c-4074-a901-822f0d6b5a8f\", // From Airport dropdown API\n    \"departureCity\": \"Kolkata\",\n    \"arrivalCity\": \"Delhi\",\n    \"departureCountry\": \"India\",\n    \"arrivalCountry\": \"India\",\n    \"flightType\": \"INTERNATIONAL\", //'DOMESTIC', 'INTERNATIONAL'\n    \"stopType\": \"ONE_STOP\", //'NON_STOP', 'ONE_STOP', 'MULTI_STOP'\n    \"economySeats\": 120,\n    \"businessSeats\": 30,\n    \"firstClassSeats\": 10,\n    \"departureTime\": \"2025-05-10T08:30:00+05:30\",\n    \"arrivalTime\": \"2025-05-10T10:45:00+05:30\",\n    \"totalDuration\": 700,\n    \"isActive\": true,\n    \"baggageAllowances\": [\n        {\n            \"passengerType\": \"ADULT\", //'ADULT', 'CHILD', 'INFANT'\n            \"cabinClass\": \"ECONOMY\", //'ECONOMY', 'BUSINESS', 'FIRST'\n            \"checkInWeight\": 23,\n            \"checkInPieces\": 2,\n            \"cabinWeight\": 7,\n            \"cabinPieces\": 1\n        },\n        {\n            \"passengerType\": \"ADULT\", //'ADULT', 'CHILD', 'INFANT'\n            \"cabinClass\": \"BUSINESS\", //'ECONOMY', 'BUSINESS', 'FIRST'\n            \"checkInWeight\": 23,\n            \"checkInPieces\": 2,\n            \"cabinWeight\": 7,\n            \"cabinPieces\": 1\n        },\n        {\n            \"passengerType\": \"ADULT\", //'ADULT', 'CHILD', 'INFANT'\n            \"cabinClass\": \"FIRST\", //'ECONOMY', 'BUSINESS', 'FIRST'\n            \"checkInWeight\": 23,\n            \"checkInPieces\": 2,\n            \"cabinWeight\": 7,\n            \"cabinPieces\": 1\n        },\n        {\n            \"passengerType\": \"CHILD\", //'ADULT', 'CHILD', 'INFANT'\n            \"cabinClass\": \"ECONOMY\", //'ECONOMY', 'BUSINESS', 'FIRST'\n            \"checkInWeight\": 23,\n            \"checkInPieces\": 2,\n            \"cabinWeight\": 7,\n            \"cabinPieces\": 1\n        },\n        {\n            \"passengerType\": \"CHILD\", //'ADULT', 'CHILD', 'INFANT'\n            \"cabinClass\": \"BUSINESS\", //'ECONOMY', 'BUSINESS', 'FIRST'\n            \"checkInWeight\": 23,\n            \"checkInPieces\": 2,\n            \"cabinWeight\": 7,\n            \"cabinPieces\": 1\n        },\n        {\n            \"passengerType\": \"CHILD\", //'ADULT', 'CHILD', 'INFANT'\n            \"cabinClass\": \"FIRST\", //'ECONOMY', 'BUSINESS', 'FIRST'\n            \"checkInWeight\": 23,\n            \"checkInPieces\": 2,\n            \"cabinWeight\": 7,\n            \"cabinPieces\": 1\n        },\n        {\n            \"passengerType\": \"INFANT\", //'ADULT', 'CHILD', 'INFANT'\n            \"cabinClass\": \"ECONOMY\", //'ECONOMY', 'BUSINESS', 'FIRST'\n            \"checkInWeight\": 23,\n            \"checkInPieces\": 2,\n            \"cabinWeight\": 7,\n            \"cabinPieces\": 1\n        },\n        {\n            \"passengerType\": \"INFANT\", //'ADULT', 'CHILD', 'INFANT'\n            \"cabinClass\": \"BUSINESS\", //'ECONOMY', 'BUSINESS', 'FIRST'\n            \"checkInWeight\": 23,\n            \"checkInPieces\": 2,\n            \"cabinWeight\": 7,\n            \"cabinPieces\": 1\n        },\n        {\n            \"passengerType\": \"INFANT\", //'ADULT', 'CHILD', 'INFANT'\n            \"cabinClass\": \"FIRST\", //'ECONOMY', 'BUSINESS', 'FIRST'\n            \"checkInWeight\": 23,\n            \"checkInPieces\": 2,\n            \"cabinWeight\": 7,\n            \"cabinPieces\": 1\n        }\n    ]\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}admin/flights",
+                      "host": [
+                        "{{baseUrl}}admin"
+                      ],
+                      "path": [
+                        "flights"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Update Flight",
+                  "request": {
+                    "method": "PATCH",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n    \"flightNumber\": \"AI214\",\n    \"airlineId\": \"45450d47-b06c-4cec-a3cd-a883c7ce9730\", // From Airline dropdown API\n    \"departureAirportId\": \"8ecd0762-aef5-41c8-9690-49d6722a0821\", // From Airport dropdown API\n    \"arrivalAirportId\": \"cd35a970-f74c-4074-a901-822f0d6b5a8f\", // From Airport dropdown API\n    \"departureCity\": \"Kolkata\",\n    \"arrivalCity\": \"Delhi\",\n    \"departureCountry\": \"India\",\n    \"arrivalCountry\": \"India\",\n    \"flightType\": \"INTERNATIONAL\", //'DOMESTIC', 'INTERNATIONAL'\n    \"stopType\": \"ONE_STOP\", //'NON_STOP', 'ONE_STOP', 'MULTI_STOP'\n    \"economySeats\": 120,\n    \"businessSeats\": 30,\n    \"firstClassSeats\": 10,\n    \"departureTime\": \"2025-05-10T08:30:00+05:30\",\n    \"arrivalTime\": \"2025-05-10T10:45:00+05:30\",\n    \"totalDuration\": 700,\n    \"isActive\": true,\n    \"baggageAllowances\": [\n        {\n            \"id\": \"3e6c829d-3371-46d9-9e00-68432d131e6c\",\n            \"passengerType\": \"ADULT\",\n            \"cabinClass\": \"ECONOMY\",\n            \"checkInWeight\": 23,\n            \"checkInPieces\": 2,\n            \"cabinWeight\": 7,\n            \"cabinPieces\": 1,\n            \"isActive\": true\n        },\n        {\n            \"id\": \"f1b66f5b-2db6-41af-a449-f9ad7213d7af\",\n            \"passengerType\": \"ADULT\",\n            \"cabinClass\": \"BUSINESS\",\n            \"checkInWeight\": 23,\n            \"checkInPieces\": 2,\n            \"cabinWeight\": 7,\n            \"cabinPieces\": 1,\n            \"isActive\": true\n        },\n        {\n            \"id\": \"9929601e-cece-44b5-92d3-7440fefc141c\",\n            \"passengerType\": \"ADULT\",\n            \"cabinClass\": \"FIRST\",\n            \"checkInWeight\": 23,\n            \"checkInPieces\": 2,\n            \"cabinWeight\": 7,\n            \"cabinPieces\": 1,\n            \"isActive\": true\n        },\n        {\n            \"id\": \"9702763a-6553-48ea-8e8a-0b2d1e5bf5d2\",\n            \"passengerType\": \"CHILD\",\n            \"cabinClass\": \"ECONOMY\",\n            \"checkInWeight\": 23,\n            \"checkInPieces\": 2,\n            \"cabinWeight\": 7,\n            \"cabinPieces\": 1,\n            \"isActive\": true\n        },\n        {\n            \"id\": \"21e5def6-6c7e-4c9e-9e64-965b7a6158e3\",\n            \"passengerType\": \"CHILD\",\n            \"cabinClass\": \"FIRST\",\n            \"checkInWeight\": 23,\n            \"checkInPieces\": 2,\n            \"cabinWeight\": 7,\n            \"cabinPieces\": 1,\n            \"isActive\": true\n        },\n        {\n            \"id\": \"fc57dca0-c800-4342-a9da-78444612dd63\",\n            \"passengerType\": \"CHILD\",\n            \"cabinClass\": \"BUSINESS\",\n            \"checkInWeight\": 23,\n            \"checkInPieces\": 2,\n            \"cabinWeight\": 7,\n            \"cabinPieces\": 1,\n            \"isActive\": true\n        },\n        {\n            \"id\": \"31de8259-cef2-40b5-b81e-2e8e144a2cc4\",\n            \"passengerType\": \"INFANT\",\n            \"cabinClass\": \"ECONOMY\",\n            \"checkInWeight\": 23,\n            \"checkInPieces\": 2,\n            \"cabinWeight\": 7,\n            \"cabinPieces\": 1,\n            \"isActive\": true\n        },\n        {\n            \"id\": \"43fe9ac8-6f58-422d-ab94-6332e142a3db\",\n            \"passengerType\": \"INFANT\",\n            \"cabinClass\": \"BUSINESS\",\n            \"checkInWeight\": 23,\n            \"checkInPieces\": 2,\n            \"cabinWeight\": 7,\n            \"cabinPieces\": 1,\n            \"isActive\": true\n        },\n        {\n            \"id\": \"c5949efe-f62b-43c4-9191-6fb994c91ebc\",\n            \"passengerType\": \"INFANT\",\n            \"cabinClass\": \"FIRST\",\n            \"checkInWeight\": 23,\n            \"checkInPieces\": 2,\n            \"cabinWeight\": 7,\n            \"cabinPieces\": 1,\n            \"isActive\": true\n        }\n    ]\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}admin/flights/2557be44-65b5-4a34-aebb-24092a0278a4",
+                      "host": [
+                        "{{baseUrl}}admin"
+                      ],
+                      "path": [
+                        "flights",
+                        "2557be44-65b5-4a34-aebb-24092a0278a4"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Delete Flight By ID",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}admin/flights/378e6e69-2e2f-45c5-bfe3-25aa6c1945dc",
+                      "host": [
+                        "{{baseUrl}}admin"
+                      ],
+                      "path": [
+                        "flights",
+                        "378e6e69-2e2f-45c5-bfe3-25aa6c1945dc"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "Flight Stops",
+              "item": [
+                {
+                  "name": "Get Flight Stops",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseUrl}}admin/flights/656f882c-902e-458e-a129-456495881c3b/stops",
+                      "host": [
+                        "{{baseUrl}}admin"
+                      ],
+                      "path": [
+                        "flights",
+                        "656f882c-902e-458e-a129-456495881c3b",
+                        "stops"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Get Flight Stops By ID",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseUrl}}admin/flights/stops/4433296f-fab0-4da8-b9e1-87ac847c2ce5",
+                      "host": [
+                        "{{baseUrl}}admin"
+                      ],
+                      "path": [
+                        "flights",
+                        "stops",
+                        "4433296f-fab0-4da8-b9e1-87ac847c2ce5"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Create Flight Stops",
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"airportId\": \"8be74323-5995-4d0f-b3c1-7a424213f884\",\n  \"stopNumber\": 2,\n  \"arrivalTime\": \"10:30:00\",\n  \"departureTime\": \"00:00:00\",\n  \"layoverDuration\": 90,\n  \"notes\": \"Short layover for refueling.\"\n}\n",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}admin/flights/656f882c-902e-458e-a129-456495881c3b/stops",
+                      "host": [
+                        "{{baseUrl}}admin"
+                      ],
+                      "path": [
+                        "flights",
+                        "656f882c-902e-458e-a129-456495881c3b",
+                        "stops"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Update Flight Stops",
+                  "request": {
+                    "method": "PATCH",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"airportId\": \"8be74323-5995-4d0f-b3c1-7a424213f884\",\n  \"stopNumber\": 1,\n  \"arrivalTime\": \"2025-06-01T10:30:00Z\",\n  \"departureTime\": \"2025-06-01T12:00:00Z\",\n  \"layoverDuration\": 100,\n  \"notes\": \"Short layover for refueling.\"\n}\n",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}admin/flights/stops/a4a27f0a-d74f-4ff0-8eae-5a42703185af/7cc8d7a2-3a7f-4925-bdfe-3b938e81331e",
+                      "host": [
+                        "{{baseUrl}}admin"
+                      ],
+                      "path": [
+                        "flights",
+                        "stops",
+                        "a4a27f0a-d74f-4ff0-8eae-5a42703185af",
+                        "7cc8d7a2-3a7f-4925-bdfe-3b938e81331e"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Delete Flight Stop",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseUrl}}admin/flights/stops/a4a27f0a-d74f-4ff0-8eae-5a42703185af/7cc8d7a2-3a7f-4925-bdfe-3b938e81331e",
+                      "host": [
+                        "{{baseUrl}}admin"
+                      ],
+                      "path": [
+                        "flights",
+                        "stops",
+                        "a4a27f0a-d74f-4ff0-8eae-5a42703185af",
+                        "7cc8d7a2-3a7f-4925-bdfe-3b938e81331e"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "Inventory",
+              "item": [
+                {
+                  "name": "Get Flight Inventories",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseUrl}}admin/flight-inventories?page=1&limit=10&groupId=&flightId=&flightNumber=&airlineId=&cabinClass=&status=&flightStatus=&fromDate=&toDate=&isAvailableForSale=",
+                      "host": [
+                        "{{baseUrl}}admin"
+                      ],
+                      "path": [
+                        "flight-inventories"
+                      ],
+                      "query": [
+                        {
+                          "key": "page",
+                          "value": "1"
+                        },
+                        {
+                          "key": "limit",
+                          "value": "10"
+                        },
+                        {
+                          "key": "groupId",
+                          "value": ""
+                        },
+                        {
+                          "key": "flightId",
+                          "value": ""
+                        },
+                        {
+                          "key": "flightNumber",
+                          "value": ""
+                        },
+                        {
+                          "key": "airlineId",
+                          "value": ""
+                        },
+                        {
+                          "key": "cabinClass",
+                          "value": ""
+                        },
+                        {
+                          "key": "status",
+                          "value": ""
+                        },
+                        {
+                          "key": "flightStatus",
+                          "value": ""
+                        },
+                        {
+                          "key": "fromDate",
+                          "value": ""
+                        },
+                        {
+                          "key": "toDate",
+                          "value": ""
+                        },
+                        {
+                          "key": "isAvailableForSale",
+                          "value": ""
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Export",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseUrl}}admin/flight-inventories/export?page=1&limit=10&groupId=&flightId=&flightNumber=&airlineId=&cabinClass=&status=&flightStatus=&fromDate=&toDate=&isAvailableForSale=",
+                      "host": [
+                        "{{baseUrl}}admin"
+                      ],
+                      "path": [
+                        "flight-inventories",
+                        "export"
+                      ],
+                      "query": [
+                        {
+                          "key": "page",
+                          "value": "1"
+                        },
+                        {
+                          "key": "limit",
+                          "value": "10"
+                        },
+                        {
+                          "key": "groupId",
+                          "value": ""
+                        },
+                        {
+                          "key": "flightId",
+                          "value": ""
+                        },
+                        {
+                          "key": "flightNumber",
+                          "value": ""
+                        },
+                        {
+                          "key": "airlineId",
+                          "value": ""
+                        },
+                        {
+                          "key": "cabinClass",
+                          "value": ""
+                        },
+                        {
+                          "key": "status",
+                          "value": ""
+                        },
+                        {
+                          "key": "flightStatus",
+                          "value": ""
+                        },
+                        {
+                          "key": "fromDate",
+                          "value": ""
+                        },
+                        {
+                          "key": "toDate",
+                          "value": ""
+                        },
+                        {
+                          "key": "isAvailableForSale",
+                          "value": ""
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Get Flight Inventory By ID",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseUrl}}admin/flight-inventories/38353cf9-3948-46b3-ac95-9e7fd65593c5",
+                      "host": [
+                        "{{baseUrl}}admin"
+                      ],
+                      "path": [
+                        "flight-inventories",
+                        "38353cf9-3948-46b3-ac95-9e7fd65593c5"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Create Flight Inventory",
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"flightId\": \"2557be44-65b5-4a34-aebb-24092a0278a4\",\n  \"effectiveFromDate\": \"2023-09-01\",\n  \"effectiveToDate\": \"2023-09-03\",\n  \"operatingDays\": [1, 2, 3, 4, 5, 6],\n  \"journeyDuration\": 500,\n  \"inventoryData\": [\n    {\n      \"cabinClass\": \"ECONOMY\",\n      \"departureTime\": \"08:30\",\n      \"arrivalTime\": \"10:45\",\n      \"totalSeats\": 150,\n      \"taxCalculationType\": \"PERCENTAGE\", //PERCENTAGE OR FIXED_AMOUNT\n      \"adultPrice\": 3500.00,\n      \"adultTax\": 50,\n      \"childPrice\": 2800.00,\n      \"childTax\": 55,\n      \"infantPrice\": 500.00,\n      \"priceMultiplier\": 1.0,\n      \"currencyCode\": \"INR\",\n      \"pnrCode\": \"ABCD123\",\n      \"pnrCodes\": {\n        \"2023-09-01\": \"EC0901A\",\n        \"2023-09-02\": \"EC0903A\"\n      },\n      \"baggageAllowance\": \"Check-in: 15kg, Cabin: 7kg\",\n      \"fareRules\": \"Cancellation charges: 20% before 24 hours, 50% within 24 hours\",\n      \"remarks\": \"Standard economy fare with complimentary meal\",\n      \"status\": \"ACTIVE\",\n      \"flightStatus\": \"SCHEDULED\",\n      \"isAvailableForSale\": true\n    },\n    {\n      \"cabinClass\": \"BUSINESS\",\n      \"departureTime\": \"08:30\",\n      \"arrivalTime\": \"10:45\",\n      \"totalSeats\": 20,\n      \"taxCalculationType\": \"PERCENTAGE\", //PERCENTAGE OR FIXED_AMOUNT\n      \"adultPrice\": 3500.00,\n      \"adultTax\": 50,\n      \"childPrice\": 2800.00,\n      \"childTax\": 55,\n      \"infantPrice\": 500.00,\n      \"priceMultiplier\": 1.2,\n      \"currencyCode\": \"INR\",\n      \"pnrCode\": \"BUSI123\",\n      \"pnrCodes\": {\n        \"2023-09-01\": \"BU0901A\",\n        \"2023-09-02\": \"BU0903A\"\n      },\n      \"baggageAllowance\": \"Check-in: 30kg, Cabin: 10kg\",\n      \"fareRules\": \"Free cancellation before 48 hours, 25% within 48 hours\",\n      \"remarks\": \"Business class with lounge access and priority boarding\",\n      \"status\": \"ACTIVE\",\n      \"flightStatus\": \"SCHEDULED\",\n      \"isAvailableForSale\": true\n    }\n  ]\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}admin/flight-inventories",
+                      "host": [
+                        "{{baseUrl}}admin"
+                      ],
+                      "path": [
+                        "flight-inventories"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Update Flight Inventory",
+                  "request": {
+                    "method": "PATCH",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n    \"cabinClass\": \"ECONOMY\",\n    \"departureTime\": \"10:30\",\n    \"arrivalTime\": \"14:45:00\",\n    \"totalSeats\": 150,\n    \"adultPrice\": 199.99,\n    \"childPrice\": 99.99,\n    \"infantPrice\": 29.99,\n    \"journeyDuration\": 255,\n    \"adultTax\": 10.5,\n    \"childTax\": 5.25,\n    \"taxCalculationType\": \"PERCENTAGE\",\n    \"priceMultiplier\": 1.25,\n    \"currencyCode\": \"USD\",\n    \"pnrCode\": \"ABC1234567\",\n    \"baggageAllowance\": \"20kg checked baggage + 7kg cabin\",\n    \"fareRules\": \"Non-refundable, date changes allowed with fee.\",\n    \"remarks\": \"Special meal requested.\",\n    \"status\": \"ACTIVE\",\n    \"flightStatus\": \"SCHEDULED\",\n    \"isAvailableForSale\": true\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}admin/flight-inventories/38353cf9-3948-46b3-ac95-9e7fd65593c5",
+                      "host": [
+                        "{{baseUrl}}admin"
+                      ],
+                      "path": [
+                        "flight-inventories",
+                        "38353cf9-3948-46b3-ac95-9e7fd65593c5"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Delete Inventories By Group ID",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"flightId\": \"a4a27f0a-d74f-4ff0-8eae-5a42703185af\",\n  \"effectiveFromDate\": \"2023-09-01\",\n  \"effectiveToDate\": \"2023-10-31\",\n  \"operatingDays\": [1, 3, 5],\n  \"inventoryData\": [\n    {\n      \"cabinClass\": \"ECONOMY\",\n      \"departureTime\": \"08:30\",\n      \"arrivalTime\": \"10:45\",\n      \"totalSeats\": 150,\n      \"basePrice\": 3500.00,\n      \"adultPrice\": 3500.00,\n      \"childPrice\": 2800.00,\n      \"infantPrice\": 500.00,\n      \"priceMultiplier\": 1.0,\n      \"currencyCode\": \"INR\",\n      \"pnrCode\": \"ABCD123\",\n      \"pnrCodes\": {\n        \"2023-09-01\": \"EC0901A\",\n        \"2023-09-03\": \"EC0903A\",\n        \"2023-09-05\": \"EC0905A\"\n      },\n      \"baggageAllowance\": \"Check-in: 15kg, Cabin: 7kg\",\n      \"fareRules\": \"Cancellation charges: 20% before 24 hours, 50% within 24 hours\",\n      \"remarks\": \"Standard economy fare with complimentary meal\",\n      \"status\": \"ACTIVE\",\n      \"flightStatus\": \"SCHEDULED\",\n      \"isAvailableForSale\": true\n    },\n    {\n      \"cabinClass\": \"BUSINESS\",\n      \"departureTime\": \"08:30\",\n      \"arrivalTime\": \"10:45\",\n      \"totalSeats\": 20,\n      \"basePrice\": 8500.00,\n      \"adultPrice\": 8500.00,\n      \"childPrice\": 6800.00,\n      \"infantPrice\": 1000.00,\n      \"priceMultiplier\": 1.2,\n      \"currencyCode\": \"INR\",\n      \"pnrCode\": \"BUSI123\",\n      \"pnrCodes\": {\n        \"2023-09-01\": \"BU0901A\",\n        \"2023-09-03\": \"BU0903A\",\n        \"2023-09-05\": \"BU0905A\"\n      },\n      \"baggageAllowance\": \"Check-in: 30kg, Cabin: 10kg\",\n      \"fareRules\": \"Free cancellation before 48 hours, 25% within 48 hours\",\n      \"remarks\": \"Business class with lounge access and priority boarding\",\n      \"status\": \"ACTIVE\",\n      \"flightStatus\": \"SCHEDULED\",\n      \"isAvailableForSale\": true\n    }\n  ]\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}admin/flight-inventories/group/f381c22e-33e1-45c2-91b8-146d076f263e",
+                      "host": [
+                        "{{baseUrl}}admin"
+                      ],
+                      "path": [
+                        "flight-inventories",
+                        "group",
+                        "f381c22e-33e1-45c2-91b8-146d076f263e"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Update Bulk Status",
+                  "request": {
+                    "method": "PATCH",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"inventoryIds\": [\n    \"f106e722-4a3a-42a8-989c-3255cf792f79\",\n    \"ad37a283-64a9-4c39-814e-a857a52f4d43\"\n  ],\n  \"status\": \"INACTIVE\" //'ACTIVE', 'INACTIVE', 'SOLD_OUT'\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}admin/flight-inventories/bulk-status",
+                      "host": [
+                        "{{baseUrl}}admin"
+                      ],
+                      "path": [
+                        "flight-inventories",
+                        "bulk-status"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Bulk Verify Inventory",
+                  "request": {
+                    "method": "PATCH",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"inventoryIds\": [\n    \"54db702d-e9e3-422e-972f-384086e38b16\",\n    \"ff6898ae-e712-422a-ae60-c377bb837932\"\n  ]\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}admin/flight-inventories/bulk-verify",
+                      "host": [
+                        "{{baseUrl}}admin"
+                      ],
+                      "path": [
+                        "flight-inventories",
+                        "bulk-verify"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Bulk Unverify Inventory",
+                  "request": {
+                    "method": "PATCH",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"inventoryIds\": [\n    \"85eacaec-ef9b-4e6c-9cd8-4301a7888b05\",\n    \"f0ff4ba7-1a42-4e21-a2d3-17325a1d0ff0\"\n  ]\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}admin/flight-inventories/bulk-unverify",
+                      "host": [
+                        "{{baseUrl}}admin"
+                      ],
+                      "path": [
+                        "flight-inventories",
+                        "bulk-unverify"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Bulk Reject Inventory",
+                  "request": {
+                    "method": "PATCH",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"inventoryIds\": [\n    \"85eacaec-ef9b-4e6c-9cd8-4301a7888b05\",\n    \"f0ff4ba7-1a42-4e21-a2d3-17325a1d0ff0\"\n  ],\n  \"rejectionReason\": \"What is thuis?\"\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}admin/flight-inventories/bulk-reject",
+                      "host": [
+                        "{{baseUrl}}admin"
+                      ],
+                      "path": [
+                        "flight-inventories",
+                        "bulk-reject"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "Booking",
+              "item": [
+                {
+                  "name": "Booking Request",
+                  "item": [
+                    {
+                      "name": "Booking Request Stats",
+                      "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                          "raw": "{{baseUrl}}admin/flight-booking-requests/stats",
+                          "host": [
+                            "{{baseUrl}}admin"
+                          ],
+                          "path": [
+                            "flight-booking-requests",
+                            "stats"
+                          ]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "Get Booking Requests",
+                      "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                          "raw": "{{baseUrl}}admin/flight-booking-requests?page=&limit&status&source&fromDate&toDate&userId&search&sortBy&sortOrder",
+                          "host": [
+                            "{{baseUrl}}admin"
+                          ],
+                          "path": [
+                            "flight-booking-requests"
+                          ],
+                          "query": [
+                            {
+                              "key": "page",
+                              "value": ""
+                            },
+                            {
+                              "key": "limit",
+                              "value": null
+                            },
+                            {
+                              "key": "status",
+                              "value": null
+                            },
+                            {
+                              "key": "source",
+                              "value": null
+                            },
+                            {
+                              "key": "fromDate",
+                              "value": null
+                            },
+                            {
+                              "key": "toDate",
+                              "value": null
+                            },
+                            {
+                              "key": "userId",
+                              "value": null
+                            },
+                            {
+                              "key": "search",
+                              "value": null
+                            },
+                            {
+                              "key": "sortBy",
+                              "value": null
+                            },
+                            {
+                              "key": "sortOrder",
+                              "value": null
+                            }
+                          ]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "Export",
+                      "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                          "raw": "{{baseUrl}}admin/flight-booking-requests/export?page=&limit&status&source&fromDate&toDate&userId&search&sortBy&sortOrder",
+                          "host": [
+                            "{{baseUrl}}admin"
+                          ],
+                          "path": [
+                            "flight-booking-requests",
+                            "export"
+                          ],
+                          "query": [
+                            {
+                              "key": "page",
+                              "value": ""
+                            },
+                            {
+                              "key": "limit",
+                              "value": null
+                            },
+                            {
+                              "key": "status",
+                              "value": null
+                            },
+                            {
+                              "key": "source",
+                              "value": null
+                            },
+                            {
+                              "key": "fromDate",
+                              "value": null
+                            },
+                            {
+                              "key": "toDate",
+                              "value": null
+                            },
+                            {
+                              "key": "userId",
+                              "value": null
+                            },
+                            {
+                              "key": "search",
+                              "value": null
+                            },
+                            {
+                              "key": "sortBy",
+                              "value": null
+                            },
+                            {
+                              "key": "sortOrder",
+                              "value": null
+                            }
+                          ]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "Get Booking Requests  By ID",
+                      "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                          "raw": "{{baseUrl}}admin/flight-booking-requests/f889ac5c-6f86-4502-aca1-0838c15277e9",
+                          "host": [
+                            "{{baseUrl}}admin"
+                          ],
+                          "path": [
+                            "flight-booking-requests",
+                            "f889ac5c-6f86-4502-aca1-0838c15277e9"
+                          ]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "Change Request Status",
+                      "request": {
+                        "method": "PATCH",
+                        "header": [],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "{\n    // Status of the request (required)\n    // Allowed values: 'PENDING', 'UNDER_REVIEW', 'APPROVED', 'REJECTED', 'CANCELLED', 'CONVERTED'\n    \"status\": \"REJECTED\",\n    // Required if status is 'REJECTED'\n    \"rejectionReason\": \"Missing required documents\",\n    // Optional notes field\n    \"notes\": \"User did not upload ID proof\"\n}",
+                          "options": {
+                            "raw": {
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}admin/flight-booking-requests/b42ccebf-0994-4f82-a1d8-82f360081f45/status",
+                          "host": [
+                            "{{baseUrl}}admin"
+                          ],
+                          "path": [
+                            "flight-booking-requests",
+                            "b42ccebf-0994-4f82-a1d8-82f360081f45",
+                            "status"
+                          ]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "Convert Booking Request",
+                      "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                          "mode": "formdata",
+                          "formdata": []
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}admin/flight-booking-requests/391f56c1-e09f-458d-9d2b-92c9fdda8a67/convert",
+                          "host": [
+                            "{{baseUrl}}admin"
+                          ],
+                          "path": [
+                            "flight-booking-requests",
+                            "391f56c1-e09f-458d-9d2b-92c9fdda8a67",
+                            "convert"
+                          ]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "Delete Booking Request",
+                      "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                          "raw": "{{baseUrl}}admin/flight-booking-requests/b42ccebf-0994-4f82-a1d8-82f360081f45",
+                          "host": [
+                            "{{baseUrl}}admin"
+                          ],
+                          "path": [
+                            "flight-booking-requests",
+                            "b42ccebf-0994-4f82-a1d8-82f360081f45"
+                          ]
+                        }
+                      },
+                      "response": []
+                    }
+                  ]
+                },
+                {
+                  "name": "Bookings",
+                  "item": [
+                    {
+                      "name": "Get Flight Bookings",
+                      "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                      },
+                      "request": {
+                        "method": "GET",
+                        "header": [],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "",
+                          "options": {
+                            "raw": {
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}admin/flight-bookings?status=&paymentStatus=&source=&fromDate=&toDate=&search=&sortBy=&sortOrder=",
+                          "host": [
+                            "{{baseUrl}}admin"
+                          ],
+                          "path": [
+                            "flight-bookings"
+                          ],
+                          "query": [
+                            {
+                              "key": "status",
+                              "value": "",
+                              "description": "'PENDING', 'CONFIRMED', 'CANCELLED', 'COMPLETED', 'PAYMENT_CONFIRMED', 'PAYMENT_PENDING', 'REFUNDED', 'PARTIALLY_REFUNDED'"
+                            },
+                            {
+                              "key": "paymentStatus",
+                              "value": "",
+                              "description": "'PENDING', 'CONFIRMED', 'PARTIALLY_PAID', 'REFUNDED', 'PARTIALLY_REFUNDED'"
+                            },
+                            {
+                              "key": "source",
+                              "value": "",
+                              "description": "'WEB', 'MOBILE_APP', 'ADMIN', 'API', 'AGENT'"
+                            },
+                            {
+                              "key": "fromDate",
+                              "value": ""
+                            },
+                            {
+                              "key": "toDate",
+                              "value": ""
+                            },
+                            {
+                              "key": "search",
+                              "value": "",
+                              "description": "search by contact full name , email and phone"
+                            },
+                            {
+                              "key": "sortBy",
+                              "value": ""
+                            },
+                            {
+                              "key": "sortOrder",
+                              "value": "",
+                              "description": "ASC or DESC"
+                            }
+                          ]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "Export",
+                      "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                      },
+                      "request": {
+                        "method": "GET",
+                        "header": [],
+                        "body": {
+                          "mode": "raw",
+                          "raw": "",
+                          "options": {
+                            "raw": {
+                              "language": "json"
+                            }
+                          }
+                        },
+                        "url": {
+                          "raw": "{{baseUrl}}admin/flight-bookings/export?status=CONFIRMED&paymentStatus=CONFIRMED&source=WEB&fromDate=2025-06-01&toDate=2025-06-05&search=&sortBy=createdAt&sortOrder=ASC",
+                          "host": [
+                            "{{baseUrl}}admin"
+                          ],
+                          "path": [
+                            "flight-bookings",
+                            "export"
+                          ],
+                          "query": [
+                            {
+                              "key": "status",
+                              "value": "CONFIRMED",
+                              "description": "'PENDING', 'CONFIRMED', 'CANCELLED', 'COMPLETED', 'PAYMENT_CONFIRMED', 'PAYMENT_PENDING', 'REFUNDED', 'PARTIALLY_REFUNDED'"
+                            },
+                            {
+                              "key": "paymentStatus",
+                              "value": "CONFIRMED",
+                              "description": "'PENDING', 'CONFIRMED', 'PARTIALLY_PAID', 'REFUNDED', 'PARTIALLY_REFUNDED'"
+                            },
+                            {
+                              "key": "source",
+                              "value": "WEB",
+                              "description": "'WEB', 'MOBILE_APP', 'ADMIN', 'API', 'AGENT'"
+                            },
+                            {
+                              "key": "fromDate",
+                              "value": "2025-06-01"
+                            },
+                            {
+                              "key": "toDate",
+                              "value": "2025-06-05"
+                            },
+                            {
+                              "key": "search",
+                              "value": "",
+                              "description": "search by contact full name , email and phone"
+                            },
+                            {
+                              "key": "sortBy",
+                              "value": "createdAt"
+                            },
+                            {
+                              "key": "sortOrder",
+                              "value": "ASC",
+                              "description": "ASC or DESC"
+                            }
+                          ]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "Get Flight Bookings Stats",
+                      "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                          "raw": "{{baseUrl}}admin/flight-bookings/stats",
+                          "host": [
+                            "{{baseUrl}}admin"
+                          ],
+                          "path": [
+                            "flight-bookings",
+                            "stats"
+                          ]
+                        }
+                      },
+                      "response": []
+                    },
+                    {
+                      "name": "Get Flight Details",
+                      "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                          "raw": "{{baseUrl}}admin/flight-bookings/5df813c3-0934-4549-b77f-3132b79de604",
+                          "host": [
+                            "{{baseUrl}}admin"
+                          ],
+                          "path": [
+                            "flight-bookings",
+                            "5df813c3-0934-4549-b77f-3132b79de604"
+                          ]
+                        }
+                      },
+                      "response": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Dropdown",
+          "item": [
+            {
+              "name": "Airport Dropdown",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}admin/airports/dropdown?search=",
+                  "host": [
+                    "{{baseUrl}}admin"
+                  ],
+                  "path": [
+                    "airports",
+                    "dropdown"
+                  ],
+                  "query": [
+                    {
+                      "key": "search",
+                      "value": ""
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Airline Dropdown",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}admin/airlines/dropdown?search=Indigo",
+                  "host": [
+                    "{{baseUrl}}admin"
+                  ],
+                  "path": [
+                    "airlines",
+                    "dropdown"
+                  ],
+                  "query": [
+                    {
+                      "key": "search",
+                      "value": "Indigo"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Flight Dropdown",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}admin/flights/dropdown?search=&airlineId=",
+                  "host": [
+                    "{{baseUrl}}admin"
+                  ],
+                  "path": [
+                    "flights",
+                    "dropdown"
+                  ],
+                  "query": [
+                    {
+                      "key": "search",
+                      "value": ""
+                    },
+                    {
+                      "key": "airlineId",
+                      "value": ""
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ],
+      "description": "Admin-related endpoints",
+      "auth": {
+        "type": "bearer",
+        "bearer": [
+          {
+            "key": "token",
+            "value": "{{adminToken}}",
+            "type": "string"
+          }
+        ]
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "exec": [
+              ""
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "exec": [
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Utilities",
+      "item": [
+        {
+          "name": "Generate JWT Secret",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/admin/utilities/generate-jwt-secret",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "admin",
+                "utilities",
+                "generate-jwt-secret"
+              ]
+            },
+            "description": "Generate a new JWT secret (administrative command line utility, not an actual API endpoint)"
+          },
+          "response": []
+        },
+        {
+          "name": "Redis Health Check",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/admin/health/redis",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "admin",
+                "health",
+                "redis"
+              ]
+            },
+            "description": "Check Redis connection health (conceptual endpoint)"
+          },
+          "response": []
+        }
+      ],
+      "description": "Utility endpoints for system management"
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://3.110.119.245/api/v1/",
+      "type": "string"
+    },
+    {
+      "key": "userToken",
+      "value": "your-user-jwt-token",
+      "type": "string"
+    },
+    {
+      "key": "adminToken",
+      "value": "your-admin-jwt-token",
+      "type": "string"
+    },
+    {
+      "key": "version",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "adminSessionId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "adminLoggedInEmail",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}
