@@ -2,17 +2,20 @@
 
 import { useState } from "react";
 
+import { useDebounce } from "@/hooks/useDebounce";
 import { useAirportSearch } from "@/lib/use-airport-search";
 
 export default function Home() {
   const [keyword, setKeyword] = useState("");
+
+  const debouncedKeyword = useDebounce(keyword, 300);
 
   const {
     data: airports = [],
     isLoading,
     isError,
     error,
-  } = useAirportSearch(keyword);
+  } = useAirportSearch(debouncedKeyword);
 
   return (
     <main className="min-h-screen p-8">
@@ -30,9 +33,11 @@ export default function Home() {
 
         <input
           id="departure-airport"
+          type="text"
           value={keyword}
           onChange={(event) => setKeyword(event.target.value)}
           placeholder="Search airport..."
+          autoComplete="off"
           className="w-full rounded-lg border px-4 py-3 outline-none focus:ring-2"
         />
 
@@ -42,7 +47,7 @@ export default function Home() {
           </p>
         )}
 
-        {isLoading && (
+        {isLoading && debouncedKeyword.length >= 2 && (
           <p className="mt-3 text-sm">
             Searching airports...
           </p>
@@ -77,7 +82,7 @@ export default function Home() {
         )}
 
         {!isLoading &&
-          keyword.length >= 2 &&
+          debouncedKeyword.length >= 2 &&
           airports.length === 0 &&
           !isError && (
             <p className="mt-3 text-sm">
