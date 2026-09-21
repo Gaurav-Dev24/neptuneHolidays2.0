@@ -2,6 +2,7 @@
 import express from "express";
 import cors from "cors";
 import airportRoutes from "./routes/airport.routes.js";
+import { errorHandler } from "./middleware/error-handler.js";
 
 // Initializing express app
 const app = express();
@@ -25,5 +26,8 @@ app.get("/api/v1/health", (_req, res) => {
 
 // User Routes
 app.use("/api/v1/user/airports", airportRoutes);
+
+// Must be registered after the routes
+app.use(errorHandler);
 
 export default app;

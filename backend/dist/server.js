@@ -1,4 +1,5 @@
 "use strict";
+// This is the server entry file
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
