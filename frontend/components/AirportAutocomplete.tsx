@@ -211,7 +211,7 @@ export default function AirportAutocomplete({
             </div>
 
             {isOpen && canShowResults && (
-                <div className="absolute z-30 mt-2 max-h-72 w-full overflow-y-auto rounded-2xl border border-slate-100 bg-white p-1.5 shadow-2xl ring-1 ring-black/5 animate-in fade-in-50 zoom-in-95 duration-150">
+                <div className="absolute z-50 mt-2 max-h-72 w-full overflow-y-auto rounded-2xl border border-slate-100 bg-white p-1.5 shadow-2xl ring-1 ring-black/5 animate-in fade-in-50 zoom-in-95 duration-150">
                     {isLoading && (
                         <div className="flex items-center gap-2.5 px-4 py-3 text-sm text-slate-500">
                             <Loader2 className="h-4 w-4 animate-spin text-blue-600" />

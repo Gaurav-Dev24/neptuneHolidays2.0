@@ -142,7 +142,7 @@ export default function FlightResults({
     }
 
     return (
-        <section className="mt-8 space-y-4">
+        <section className="relative z-10 mt-8 space-y-4">
             {/* Results Header */}
             <div className="flex items-center justify-between px-1">
                 <div>

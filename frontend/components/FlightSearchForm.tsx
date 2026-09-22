@@ -199,7 +199,7 @@ export default function FlightSearchForm({
     return (
         <form
             onSubmit={handleSubmit(onSubmit)}
-            className="relative rounded-3xl border border-slate-200/80 bg-white/95 p-6 shadow-xl shadow-slate-200/50 backdrop-blur-sm sm:p-8"
+            className="relative z-30 rounded-3xl border border-slate-200/80 bg-white/95 p-6 shadow-xl shadow-slate-200/50 backdrop-blur-sm sm:p-8"
         >
             {/* Registered hidden inputs for React Hook Form */}
             <input type="hidden" {...register("tripType")} />
@@ -555,6 +555,7 @@ export default function FlightSearchForm({
                         minDate={today}
                         placeholder="Select departure date"
                         error={errors.departureDate?.message}
+                        align="right"
                     />
                 </div>
 
@@ -573,6 +574,7 @@ export default function FlightSearchForm({
                             minDate={departureDate || today}
                             placeholder="Select return date"
                             error={errors.returnDate?.message}
+                            align="right"
                             onClear={() =>
                                 setValue("returnDate", "", {
                                     shouldValidate: true,

@@ -16,6 +16,7 @@ interface CustomDatePickerProps {
     placeholder?: string;
     error?: string;
     onClear?: () => void;
+    align?: "left" | "right";
 }
 
 const MONTH_NAMES = [
@@ -59,6 +60,7 @@ export default function CustomDatePicker({
     placeholder = "Select date",
     error,
     onClear,
+    align = "left",
 }: CustomDatePickerProps) {
     const [isOpen, setIsOpen] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
@@ -242,7 +244,11 @@ export default function CustomDatePicker({
 
             {/* Interactive Floating Calendar Popover */}
             {isOpen && (
-                <div className="absolute left-0 z-40 mt-1 w-80 rounded-2xl border border-slate-100 bg-white p-4 shadow-2xl ring-1 ring-black/5 animate-in fade-in-50 zoom-in-95 duration-150">
+                <div
+                    className={`absolute ${
+                        align === "right" ? "right-0" : "left-0"
+                    } z-50 mt-1 w-80 rounded-2xl border border-slate-100 bg-white p-4 shadow-2xl ring-1 ring-black/5 animate-in fade-in-50 zoom-in-95 duration-150`}
+                >
                     {/* Calendar Month & Year Nav */}
                     <div className="flex items-center justify-between mb-4">
                         <h4 className="text-sm font-bold text-slate-800">
