@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { PlaneTakeoff, PlaneLanding, MapPin, X, Loader2 } from "lucide-react";
 
 import { useDebounce } from "@/hooks/useDebounce";
 import { useAirportSearch } from "@/lib/use-airport-search";
@@ -13,6 +14,7 @@ interface AirportAutocompleteProps {
     placeholder: string;
     selectedAirport: Airport | null;
     onSelect: (airport: Airport) => void;
+    onClear?: () => void;
     type: "departure" | "arrival";
     departureAirportId?: string | null;
 }
@@ -22,6 +24,7 @@ export default function AirportAutocomplete({
     placeholder,
     selectedAirport,
     onSelect,
+    onClear,
     type,
     departureAirportId = null,
 }: AirportAutocompleteProps) {
@@ -61,6 +64,15 @@ export default function AirportAutocomplete({
         type === "departure"
             ? departureQuery.isError
             : arrivalQuery.isError;
+
+    // Synchronize keyword when selectedAirport changes externally (e.g. airport swap or reset)
+    useEffect(() => {
+        if (selectedAirport) {
+            setKeyword(`${selectedAirport.city} (${selectedAirport.code})`);
+        } else {
+            setKeyword("");
+        }
+    }, [selectedAirport]);
 
     const filteredAirports = useMemo(() => {
         if (type === "departure") {
@@ -133,18 +145,38 @@ export default function AirportAutocomplete({
     function handleClear() {
         setKeyword("");
         setIsOpen(false);
+        if (onClear) {
+            onClear();
+        }
     }
+
+    const isDisabled = type === "arrival" && !departureAirportId;
 
     return (
         <div
             ref={containerRef}
-            className="relative"
+            className="relative w-full"
         >
-            <label className="mb-2 block text-sm font-medium text-gray-700">
-                {label}
-            </label>
+            <div className="flex items-center justify-between mb-1.5 h-5">
+                <label className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+                    {label}
+                </label>
+                {selectedAirport && (
+                    <span className="inline-flex items-center gap-1 rounded-full bg-blue-50 px-2 py-0.5 text-[11px] font-semibold text-blue-700">
+                        {selectedAirport.code}
+                    </span>
+                )}
+            </div>
 
-            <div className="relative">
+            <div className="relative group">
+                <div className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-600 transition-colors">
+                    {type === "departure" ? (
+                        <PlaneTakeoff className="h-5 w-5" />
+                    ) : (
+                        <PlaneLanding className="h-5 w-5" />
+                    )}
+                </div>
+
                 <input
                     type="text"
                     value={keyword}
@@ -152,53 +184,53 @@ export default function AirportAutocomplete({
                         handleChange(event.target.value)
                     }
                     onFocus={() => setIsOpen(true)}
-                    placeholder={placeholder}
+                    placeholder={isDisabled ? "Select departure first" : placeholder}
                     autoComplete="off"
-                    disabled={
-                        type === "arrival" &&
-                        !departureAirportId
-                    }
-                    className="w-full rounded-xl border border-gray-300 px-4 py-3 pr-10 outline-none transition focus:border-black disabled:bg-gray-100"
+                    disabled={isDisabled}
+                    className="h-[50px] w-full rounded-2xl border border-slate-200 bg-white py-3.5 pl-11 pr-10 text-sm font-medium text-slate-900 placeholder:text-slate-400 outline-none transition-all duration-200 hover:border-slate-300 focus:border-blue-600 focus:ring-4 focus:ring-blue-100/70 disabled:cursor-not-allowed disabled:bg-slate-100/80 disabled:text-slate-400 shadow-xs"
                 />
 
-                {keyword && (
+                {keyword && !isDisabled && (
                     <button
                         type="button"
                         onClick={handleClear}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 flex h-6 w-6 items-center justify-center rounded-full text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition"
                         aria-label={`Clear ${label}`}
                     >
-                        ×
+                        <X className="h-3.5 w-3.5" />
                     </button>
                 )}
             </div>
 
-            {type === "arrival" &&
-                !departureAirportId && (
-                    <p className="mt-1 text-xs text-gray-500">
-                        Select your departure airport first.
+            <div className="min-h-[20px] mt-1.5">
+                {type === "arrival" && !departureAirportId && (
+                    <p className="text-xs text-amber-600/90 font-medium">
+                        Select departure airport first
                     </p>
                 )}
+            </div>
 
             {isOpen && canShowResults && (
-                <div className="absolute z-20 mt-2 w-full overflow-hidden rounded-xl border bg-white shadow-lg">
+                <div className="absolute z-30 mt-2 max-h-72 w-full overflow-y-auto rounded-2xl border border-slate-100 bg-white p-1.5 shadow-2xl ring-1 ring-black/5 animate-in fade-in-50 zoom-in-95 duration-150">
                     {isLoading && (
-                        <div className="px-4 py-3 text-sm text-gray-500">
-                            Searching airports...
+                        <div className="flex items-center gap-2.5 px-4 py-3 text-sm text-slate-500">
+                            <Loader2 className="h-4 w-4 animate-spin text-blue-600" />
+                            <span>Searching airports...</span>
                         </div>
                     )}
 
                     {isError && (
-                        <div className="px-4 py-3 text-sm text-red-600">
-                            Unable to load airports.
+                        <div className="px-4 py-3 text-sm text-red-600 bg-red-50/50 rounded-xl">
+                            Unable to load airports. Please try again.
                         </div>
                     )}
 
                     {!isLoading &&
                         !isError &&
                         filteredAirports.length === 0 && (
-                            <div className="px-4 py-3 text-sm text-gray-500">
-                                No airports found.
+                            <div className="px-4 py-6 text-center text-sm text-slate-500">
+                                <MapPin className="mx-auto h-6 w-6 text-slate-300 mb-1" />
+                                No matching airports found
                             </div>
                         )}
 
@@ -211,24 +243,28 @@ export default function AirportAutocomplete({
                                 onClick={() =>
                                     handleSelect(airport)
                                 }
-                                className="block w-full px-4 py-3 text-left transition hover:bg-gray-50"
+                                className="group flex w-full items-center justify-between rounded-xl px-3.5 py-2.5 text-left transition-colors hover:bg-blue-50/70"
                             >
-                                <div className="font-medium">
-                                    {airport.city} ({airport.code})
+                                <div className="flex items-center gap-3">
+                                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-600 group-hover:bg-blue-100 group-hover:text-blue-700 transition-colors">
+                                        <MapPin className="h-4 w-4" />
+                                    </div>
+                                    <div>
+                                        <div className="text-sm font-semibold text-slate-900 group-hover:text-blue-700">
+                                            {airport.city}
+                                        </div>
+                                        <div className="text-xs text-slate-500 line-clamp-1">
+                                            {airport.name}
+                                        </div>
+                                    </div>
                                 </div>
 
-                                <div className="text-sm text-gray-500">
-                                    {airport.name}
-                                </div>
+                                <span className="shrink-0 rounded-md bg-slate-100 px-2 py-1 text-xs font-bold tracking-wider text-slate-700 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                                    {airport.code}
+                                </span>
                             </button>
                         ))}
                 </div>
-            )}
-
-            {selectedAirport && (
-                <p className="mt-1 text-xs text-green-600">
-                    Selected: {selectedAirport.code}
-                </p>
             )}
         </div>
     );
