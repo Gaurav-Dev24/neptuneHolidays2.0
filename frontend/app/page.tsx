@@ -2,93 +2,53 @@
 
 import { useState } from "react";
 
-import { useDebounce } from "@/hooks/useDebounce";
-import { useAirportSearch } from "@/lib/use-airport-search";
+import FlightSearchForm from "@/components/FlightSearchForm";
+import FlightResults from "@/components/FlightResults";
+
+import {
+  type FlightSearchRequest,
+} from "@/lib/flight-api";
+
+import { useFlightSearch } from "@/lib/use-flight-search";
 
 export default function Home() {
-  const [keyword, setKeyword] = useState("");
-
-  const debouncedKeyword = useDebounce(keyword, 300);
+  const [searchPayload, setSearchPayload] =
+    useState<FlightSearchRequest | null>(null);
 
   const {
-    data: airports = [],
+    data,
     isLoading,
     isError,
-    error,
-  } = useAirportSearch(debouncedKeyword);
+  } = useFlightSearch(searchPayload);
 
   return (
-    <main className="min-h-screen p-8">
-      <h1 className="mb-6 text-3xl font-bold">
-        Neptune Holidays
-      </h1>
+    <main className="min-h-screen bg-gray-50 px-4 py-10">
+      <div className="mx-auto max-w-6xl">
+        <div className="mb-8">
+          <p className="mb-2 text-sm font-medium uppercase tracking-wide text-gray-500">
+            Neptune Holidays
+          </p>
 
-      <div className="max-w-md">
-        <label
-          htmlFor="departure-airport"
-          className="mb-2 block text-sm font-medium"
-        >
-          Departure Airport
-        </label>
+          <h1 className="text-4xl font-bold tracking-tight">
+            Find your next flight
+          </h1>
 
-        <input
-          id="departure-airport"
-          type="text"
-          value={keyword}
-          onChange={(event) => setKeyword(event.target.value)}
-          placeholder="Search airport..."
-          autoComplete="off"
-          className="w-full rounded-lg border px-4 py-3 outline-none focus:ring-2"
+          <p className="mt-2 text-gray-600">
+            Search flights using the local Neptune API.
+          </p>
+        </div>
+
+        <FlightSearchForm
+          onSearch={setSearchPayload}
         />
 
-        {keyword.length > 0 && keyword.length < 2 && (
-          <p className="mt-2 text-sm">
-            Enter at least 2 characters.
-          </p>
+        {searchPayload && (
+          <FlightResults
+            flights={data?.results ?? []}
+            isLoading={isLoading}
+            isError={isError}
+          />
         )}
-
-        {isLoading && debouncedKeyword.length >= 2 && (
-          <p className="mt-3 text-sm">
-            Searching airports...
-          </p>
-        )}
-
-        {isError && (
-          <p className="mt-3 text-sm text-red-600">
-            {error instanceof Error
-              ? error.message
-              : "Unable to search airports."}
-          </p>
-        )}
-
-        {!isLoading && airports.length > 0 && (
-          <div className="mt-2 overflow-hidden rounded-lg border">
-            {airports.map((airport) => (
-              <button
-                key={airport.id}
-                type="button"
-                className="block w-full px-4 py-3 text-left hover:bg-gray-100"
-              >
-                <div className="font-medium">
-                  {airport.city} ({airport.code})
-                </div>
-
-                <div className="text-sm">
-                  {airport.name}
-                </div>
-              </button>
-            ))}
-          </div>
-        )}
-
-        {!isLoading &&
-          debouncedKeyword.length >= 2 &&
-          airports.length === 0 &&
-          !isError && (
-            <p className="mt-3 text-sm">
-              No airports found.
-            </p>
-          )}
       </div>
     </main>
   );

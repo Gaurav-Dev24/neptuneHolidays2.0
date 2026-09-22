@@ -23,3 +23,12 @@ export async function searchDepartureAirports(
 
     return response.data.data;
 }
+
+export async function getArrivalAirports(departureAirportId: string): Promise<Airport[]> {
+    const response = await api.post<AirportResponse>(
+        "/user/airports/arrivals",
+        { departureAirportId }
+    );
+
+    return response.data.data;
+}
