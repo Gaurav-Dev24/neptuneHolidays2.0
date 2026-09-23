@@ -17,6 +17,8 @@ interface CustomDatePickerProps {
     error?: string;
     onClear?: () => void;
     align?: "left" | "right";
+    position?: "top" | "bottom";
+    popoverClassName?: string;
 }
 
 const MONTH_NAMES = [
@@ -61,6 +63,8 @@ export default function CustomDatePicker({
     error,
     onClear,
     align = "left",
+    position = "bottom",
+    popoverClassName = "",
 }: CustomDatePickerProps) {
     const [isOpen, setIsOpen] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
@@ -247,7 +251,11 @@ export default function CustomDatePicker({
                 <div
                     className={`absolute ${
                         align === "right" ? "right-0" : "left-0"
-                    } z-50 mt-1 w-80 rounded-2xl border border-slate-100 bg-white p-4 shadow-2xl ring-1 ring-black/5 animate-in fade-in-50 zoom-in-95 duration-150`}
+                    } ${
+                        position === "top"
+                            ? "bottom-full mb-3"
+                            : "top-full mt-2"
+                    } z-50 w-80 max-w-[calc(100vw-2.5rem)] rounded-2xl border border-slate-100 bg-white p-4 shadow-2xl ring-1 ring-black/5 animate-in fade-in-50 zoom-in-95 duration-150 ${popoverClassName}`}
                 >
                     {/* Calendar Month & Year Nav */}
                     <div className="flex items-center justify-between mb-4">

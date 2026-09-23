@@ -552,6 +552,8 @@ export default function FlightSearchForm({
                         placeholder="Select departure date"
                         error={errors.departureDate?.message}
                         align="right"
+                        position="bottom"
+                        popoverClassName="sm:right-[210px]"
                     />
                 </div>
 
@@ -571,6 +573,8 @@ export default function FlightSearchForm({
                             placeholder="Select return date"
                             error={errors.returnDate?.message}
                             align="right"
+                            position="bottom"
+                            popoverClassName="sm:right-[210px]"
                             onClear={() =>
                                 setValue("returnDate", "", {
                                     shouldValidate: true,
@@ -593,7 +597,7 @@ export default function FlightSearchForm({
             {/* Bottom Actions: Search Button & Helper */}
             <div className="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-slate-100 pt-5">
                 <div className="flex items-center gap-2 text-xs text-slate-500">
-                    <Sparkles className="h-4 w-4 text-[#14789C]" />
+                    <Sparkles className="h-4 w-4 text-[#14789C] shrink-0" />
                     <span>
                         {!departureAirport || !arrivalAirport
                             ? "Select departure and destination airports to view available flights"
