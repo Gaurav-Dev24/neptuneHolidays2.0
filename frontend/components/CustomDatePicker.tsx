@@ -184,7 +184,7 @@ export default function CustomDatePicker({
                     {label}
                 </label>
                 {displaySub && (
-                    <span className="text-[11px] font-semibold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">
+                    <span className="text-[11px] font-semibold text-[#14789C] bg-[#14789C]/10 px-2 py-0.5 rounded-full">
                         {displaySub}
                     </span>
                 )}
@@ -197,13 +197,13 @@ export default function CustomDatePicker({
                     onClick={() => setIsOpen((prev) => !prev)}
                     className={`h-[50px] w-full rounded-2xl border bg-white py-2 pl-11 pr-10 text-left transition-all duration-200 shadow-xs flex items-center justify-between ${
                         isOpen
-                            ? "border-blue-600 ring-4 ring-blue-100/70"
+                            ? "border-[#14789C] ring-4 ring-[#14789C]/15"
                             : error
                             ? "border-red-300 hover:border-red-400"
                             : "border-slate-200 hover:border-slate-300"
                     }`}
                 >
-                    <div className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-600 transition-colors">
+                    <div className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#14789C] transition-colors">
                         <CalendarIcon className="h-5 w-5" />
                     </div>
 
@@ -315,15 +315,15 @@ export default function CustomDatePicker({
                                     onClick={() => handleSelectDate(day)}
                                     className={`relative flex h-9 w-9 items-center justify-center rounded-xl text-xs font-semibold transition-all ${
                                         isSelected
-                                            ? "bg-blue-600 text-white shadow-md shadow-blue-500/30"
+                                            ? "bg-[#14789C] text-white shadow-md shadow-[#14789C]/25"
                                             : isDisabled
                                             ? "text-slate-300 cursor-not-allowed"
-                                            : "text-slate-700 hover:bg-blue-50 hover:text-blue-600"
+                                            : "text-slate-700 hover:bg-[#14789C]/10 hover:text-[#14789C]"
                                     }`}
                                 >
                                     {day}
                                     {isToday && !isSelected && (
-                                        <span className="absolute bottom-1 h-1 w-1 rounded-full bg-blue-600" />
+                                        <span className="absolute bottom-1 h-1 w-1 rounded-full bg-[#14789C]" />
                                     )}
                                 </button>
                             );
@@ -336,14 +336,14 @@ export default function CustomDatePicker({
                             <button
                                 type="button"
                                 onClick={() => handleQuickSelect(0)}
-                                className="rounded-lg bg-slate-100 px-2.5 py-1 font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-700 transition"
+                                className="rounded-lg bg-slate-100 px-2.5 py-1 font-medium text-slate-700 hover:bg-[#14789C]/10 hover:text-[#14789C] transition"
                             >
                                 Today
                             </button>
                             <button
                                 type="button"
                                 onClick={() => handleQuickSelect(1)}
-                                className="rounded-lg bg-slate-100 px-2.5 py-1 font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-700 transition"
+                                className="rounded-lg bg-slate-100 px-2.5 py-1 font-medium text-slate-700 hover:bg-[#14789C]/10 hover:text-[#14789C] transition"
                             >
                                 Tomorrow
                             </button>
@@ -352,7 +352,7 @@ export default function CustomDatePicker({
                         <button
                             type="button"
                             onClick={() => setIsOpen(false)}
-                            className="font-semibold text-blue-600 hover:text-blue-800 transition px-2 py-1"
+                            className="font-semibold text-[#14789C] hover:text-[#0f5e7a] transition px-2 py-1"
                         >
                             Close
                         </button>

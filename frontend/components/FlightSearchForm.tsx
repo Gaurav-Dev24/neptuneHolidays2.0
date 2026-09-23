@@ -14,7 +14,7 @@ import {
     ChevronDown,
     Armchair,
     Check,
-    Plane,
+    PlaneTakeoff,
     Sparkles,
 } from "lucide-react";
 
@@ -228,13 +228,12 @@ export default function FlightSearchForm({
                                 shouldValidate: true,
                             })
                         }
-                        className={`flex items-center gap-2 rounded-xl px-4 py-2 transition-all duration-200 ${
-                            tripType === "oneWay"
-                                ? "bg-white text-blue-600 shadow-sm font-semibold"
-                                : "text-slate-600 hover:text-slate-900"
-                        }`}
+                        className={`flex items-center gap-2 rounded-xl px-4 py-2 transition-all duration-200 ${tripType === "oneWay"
+                            ? "bg-white text-[#14789C] shadow-sm font-semibold"
+                            : "text-slate-600 hover:text-[#14789C]"
+                            }`}
                     >
-                        <Plane className="h-4 w-4" />
+                        <PlaneTakeoff className="h-4 w-4" />
                         <span>One Way</span>
                     </button>
 
@@ -245,11 +244,10 @@ export default function FlightSearchForm({
                                 shouldValidate: true,
                             })
                         }
-                        className={`flex items-center gap-2 rounded-xl px-4 py-2 transition-all duration-200 ${
-                            tripType === "return"
-                                ? "bg-white text-blue-600 shadow-sm font-semibold"
-                                : "text-slate-600 hover:text-slate-900"
-                        }`}
+                        className={`flex items-center gap-2 rounded-xl px-4 py-2 transition-all duration-200 ${tripType === "return"
+                            ? "bg-white text-[#14789C] shadow-sm font-semibold"
+                            : "text-slate-600 hover:text-[#14789C]"
+                            }`}
                     >
                         <ArrowLeftRight className="h-4 w-4" />
                         <span>Round Trip</span>
@@ -268,9 +266,9 @@ export default function FlightSearchForm({
                                 (prev) => !prev
                             )
                         }
-                        className="flex items-center gap-2.5 rounded-2xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-xs hover:border-slate-300 hover:bg-slate-50 transition"
+                        className="flex items-center gap-2.5 rounded-2xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-xs hover:border-[#14789C]/30 hover:bg-[#FAF9F6] transition"
                     >
-                        <Users className="h-4 w-4 text-blue-600" />
+                        <Users className="h-4 w-4 text-[#14789C]" />
                         <span>
                             {totalPassengers}{" "}
                             {totalPassengers === 1
@@ -279,11 +277,10 @@ export default function FlightSearchForm({
                             , {CABIN_CLASS_LABELS[cabinClass]}
                         </span>
                         <ChevronDown
-                            className={`h-4 w-4 text-slate-400 transition-transform duration-200 ${
-                                isPassengerDropdownOpen
-                                    ? "rotate-180"
-                                    : ""
-                            }`}
+                            className={`h-4 w-4 text-slate-400 transition-transform duration-200 ${isPassengerDropdownOpen
+                                ? "rotate-180"
+                                : ""
+                                }`}
                         />
                     </button>
 
@@ -458,15 +455,14 @@ export default function FlightSearchForm({
                                                     { shouldValidate: true }
                                                 )
                                             }
-                                            className={`flex items-center justify-between rounded-xl px-3 py-2 text-xs font-semibold transition ${
-                                                cabinClass === cls
-                                                    ? "bg-blue-50 text-blue-700 ring-1 ring-blue-500/30"
-                                                    : "bg-slate-50 text-slate-600 hover:bg-slate-100"
-                                            }`}
+                                            className={`flex items-center justify-between rounded-xl px-3 py-2 text-xs font-semibold transition ${cabinClass === cls
+                                                ? "bg-[#14789C]/10 text-[#14789C] ring-1 ring-[#14789C]/30"
+                                                : "bg-slate-50 text-slate-600 hover:bg-slate-100"
+                                                }`}
                                         >
                                             <span>{CABIN_CLASS_LABELS[cls]}</span>
                                             {cabinClass === cls && (
-                                                <Check className="h-3.5 w-3.5 text-blue-600" />
+                                                <Check className="h-3.5 w-3.5 text-[#14789C]" />
                                             )}
                                         </button>
                                     ))}
@@ -478,7 +474,7 @@ export default function FlightSearchForm({
                                 onClick={() =>
                                     setIsPassengerDropdownOpen(false)
                                 }
-                                className="mt-5 w-full rounded-xl bg-slate-900 py-2.5 text-xs font-semibold text-white transition hover:bg-slate-800"
+                                className="mt-5 w-full rounded-xl bg-[#14789C] hover:bg-[#0f5e7a] py-2.5 text-xs font-semibold text-white shadow-sm shadow-[#14789C]/25 transition"
                             >
                                 Done
                             </button>
@@ -514,7 +510,7 @@ export default function FlightSearchForm({
                             type="button"
                             onClick={handleSwapAirports}
                             title="Swap airports"
-                            className="group flex h-10 w-10 items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-500 shadow-xs transition hover:border-blue-300 hover:bg-blue-50 hover:text-blue-600 active:scale-95"
+                            className="group flex h-10 w-10 items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-500 shadow-xs transition hover:border-[#14789C]/40 hover:bg-[#14789C]/10 hover:text-[#14789C] active:scale-95"
                         >
                             <ArrowLeftRight className="h-4 w-4 transition-transform duration-300 group-hover:rotate-180" />
                         </button>
@@ -597,7 +593,7 @@ export default function FlightSearchForm({
             {/* Bottom Actions: Search Button & Helper */}
             <div className="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-slate-100 pt-5">
                 <div className="flex items-center gap-2 text-xs text-slate-500">
-                    <Sparkles className="h-4 w-4 text-amber-500" />
+                    <Sparkles className="h-4 w-4 text-[#14789C]" />
                     <span>
                         {!departureAirport || !arrivalAirport
                             ? "Select departure and destination airports to view available flights"
@@ -608,7 +604,7 @@ export default function FlightSearchForm({
                 <button
                     type="submit"
                     disabled={!departureAirport || !arrivalAirport}
-                    className="w-full sm:w-auto min-w-[200px] flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 px-8 py-3.5 text-sm font-semibold text-white shadow-lg shadow-blue-500/25 transition-all duration-200 hover:from-blue-700 hover:via-indigo-700 hover:to-blue-800 hover:shadow-blue-500/40 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none"
+                    className="w-full sm:w-auto min-w-[200px] flex items-center justify-center gap-2 rounded-2xl bg-[#14789C] hover:bg-[#0f5e7a] active:bg-[#0c4e66] px-8 py-3.5 text-sm font-semibold text-white shadow-lg shadow-[#14789C]/25 transition-all duration-200 hover:shadow-[#14789C]/40 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none border border-[#14789C]"
                 >
                     <Search className="h-4 w-4" />
                     <span>Search Flights</span>

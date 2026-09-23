@@ -1,5 +1,6 @@
 "use client";
 
+import { SlidersHorizontal } from "lucide-react";
 import type { FlightFilters as FlightFilterState } from "../lib/flight-api";
 
 interface AirlineFacet {
@@ -53,11 +54,14 @@ export default function FlightFilters({
         Boolean(filters.airlines?.length);
 
     return (
-        <div className="rounded-2xl border bg-white p-5">
-            <div className="mb-5 flex items-center justify-between">
-                <h2 className="font-semibold">
-                    Filters
-                </h2>
+        <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-xs">
+            <div className="mb-5 flex items-center justify-between border-b border-slate-100 pb-3">
+                <div className="flex items-center gap-2">
+                    <SlidersHorizontal className="h-4 w-4 text-[#14789C]" />
+                    <h2 className="font-bold text-slate-900 text-sm">
+                        Filters
+                    </h2>
+                </div>
 
                 {hasFilters && (
                     <button
@@ -68,7 +72,7 @@ export default function FlightFilters({
                                 airlines: [],
                             })
                         }
-                        className="text-sm font-medium text-gray-600 hover:text-black"
+                        className="text-xs font-semibold text-[#14789C] hover:text-[#0f5e7a] transition-colors"
                     >
                         Clear all
                     </button>
@@ -76,11 +80,11 @@ export default function FlightFilters({
             </div>
 
             <section className="mb-6">
-                <h3 className="mb-3 text-sm font-semibold">
+                <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-slate-500">
                     Stops
                 </h3>
 
-                <div className="space-y-3">
+                <div className="space-y-2.5">
                     {stops.map((stop) => {
                         const checked =
                             filters.stops?.includes(stop) ?? false;
@@ -88,7 +92,7 @@ export default function FlightFilters({
                         return (
                             <label
                                 key={stop}
-                                className="flex cursor-pointer items-center gap-3 text-sm"
+                                className="group flex cursor-pointer items-center gap-3 text-sm text-slate-700 hover:text-[#14789C] transition-colors"
                             >
                                 <input
                                     type="checkbox"
@@ -96,10 +100,12 @@ export default function FlightFilters({
                                     onChange={() =>
                                         toggleStop(stop)
                                     }
-                                    className="h-4 w-4"
+                                    className="h-4 w-4 rounded border-slate-300 text-[#14789C] accent-[#14789C] focus:ring-[#14789C]/20"
                                 />
 
-                                <span>{stop}</span>
+                                <span className={checked ? "font-semibold text-slate-900" : ""}>
+                                    {stop}
+                                </span>
                             </label>
                         );
                     })}
@@ -107,11 +113,11 @@ export default function FlightFilters({
             </section>
 
             <section>
-                <h3 className="mb-3 text-sm font-semibold">
+                <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-slate-500">
                     Airlines
                 </h3>
 
-                <div className="space-y-3">
+                <div className="space-y-2.5">
                     {airlines.map((airline) => {
                         const checked =
                             filters.airlines?.includes(
@@ -121,7 +127,7 @@ export default function FlightFilters({
                         return (
                             <label
                                 key={airline.code}
-                                className="flex cursor-pointer items-center gap-3 text-sm"
+                                className="group flex cursor-pointer items-center gap-3 text-sm text-slate-700 hover:text-[#14789C] transition-colors"
                             >
                                 <input
                                     type="checkbox"
@@ -131,14 +137,14 @@ export default function FlightFilters({
                                             airline.code
                                         )
                                     }
-                                    className="h-4 w-4"
+                                    className="h-4 w-4 rounded border-slate-300 text-[#14789C] accent-[#14789C] focus:ring-[#14789C]/20"
                                 />
 
-                                <span>
+                                <span className={checked ? "font-semibold text-slate-900" : ""}>
                                     {airline.name}
                                 </span>
 
-                                <span className="ml-auto text-xs text-gray-400">
+                                <span className="ml-auto text-xs font-mono font-medium rounded bg-slate-100 px-2 py-0.5 text-slate-500 group-hover:bg-[#14789C]/10 group-hover:text-[#14789C] transition-colors">
                                     {airline.code}
                                 </span>
                             </label>

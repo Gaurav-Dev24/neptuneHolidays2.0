@@ -162,14 +162,14 @@ export default function AirportAutocomplete({
                     {label}
                 </label>
                 {selectedAirport && (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-blue-50 px-2 py-0.5 text-[11px] font-semibold text-blue-700">
+                    <span className="inline-flex items-center gap-1 rounded-full bg-[#14789C]/10 px-2 py-0.5 text-[11px] font-semibold text-[#14789C]">
                         {selectedAirport.code}
                     </span>
                 )}
             </div>
 
             <div className="relative group">
-                <div className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-600 transition-colors">
+                <div className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#14789C] transition-colors">
                     {type === "departure" ? (
                         <PlaneTakeoff className="h-5 w-5" />
                     ) : (
@@ -187,7 +187,7 @@ export default function AirportAutocomplete({
                     placeholder={isDisabled ? "Select departure first" : placeholder}
                     autoComplete="off"
                     disabled={isDisabled}
-                    className="h-[50px] w-full rounded-2xl border border-slate-200 bg-white py-3.5 pl-11 pr-10 text-sm font-medium text-slate-900 placeholder:text-slate-400 outline-none transition-all duration-200 hover:border-slate-300 focus:border-blue-600 focus:ring-4 focus:ring-blue-100/70 disabled:cursor-not-allowed disabled:bg-slate-100/80 disabled:text-slate-400 shadow-xs"
+                    className="h-[50px] w-full rounded-2xl border border-slate-200 bg-white py-3.5 pl-11 pr-10 text-sm font-medium text-slate-900 placeholder:text-slate-400 outline-none transition-all duration-200 hover:border-slate-300 focus:border-[#14789C] focus:ring-4 focus:ring-[#14789C]/15 disabled:cursor-not-allowed disabled:bg-slate-100/80 disabled:text-slate-400 shadow-xs"
                 />
 
                 {keyword && !isDisabled && (
@@ -214,7 +214,7 @@ export default function AirportAutocomplete({
                 <div className="absolute z-50 mt-2 max-h-72 w-full overflow-y-auto rounded-2xl border border-slate-100 bg-white p-1.5 shadow-2xl ring-1 ring-black/5 animate-in fade-in-50 zoom-in-95 duration-150">
                     {isLoading && (
                         <div className="flex items-center gap-2.5 px-4 py-3 text-sm text-slate-500">
-                            <Loader2 className="h-4 w-4 animate-spin text-blue-600" />
+                            <Loader2 className="h-4 w-4 animate-spin text-[#14789C]" />
                             <span>Searching airports...</span>
                         </div>
                     )}
@@ -243,14 +243,14 @@ export default function AirportAutocomplete({
                                 onClick={() =>
                                     handleSelect(airport)
                                 }
-                                className="group flex w-full items-center justify-between rounded-xl px-3.5 py-2.5 text-left transition-colors hover:bg-blue-50/70"
+                                className="group flex w-full items-center justify-between rounded-xl px-3.5 py-2.5 text-left transition-colors hover:bg-[#14789C]/5"
                             >
                                 <div className="flex items-center gap-3">
-                                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-600 group-hover:bg-blue-100 group-hover:text-blue-700 transition-colors">
+                                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-600 group-hover:bg-[#14789C]/10 group-hover:text-[#14789C] transition-colors">
                                         <MapPin className="h-4 w-4" />
                                     </div>
                                     <div>
-                                        <div className="text-sm font-semibold text-slate-900 group-hover:text-blue-700">
+                                        <div className="text-sm font-semibold text-slate-900 group-hover:text-[#14789C]">
                                             {airport.city}
                                         </div>
                                         <div className="text-xs text-slate-500 line-clamp-1">
@@ -259,7 +259,7 @@ export default function AirportAutocomplete({
                                     </div>
                                 </div>
 
-                                <span className="shrink-0 rounded-md bg-slate-100 px-2 py-1 text-xs font-bold tracking-wider text-slate-700 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                                <span className="shrink-0 rounded-md bg-slate-100 px-2 py-1 text-xs font-bold tracking-wider text-slate-700 group-hover:bg-[#14789C] group-hover:text-white transition-colors">
                                     {airport.code}
                                 </span>
                             </button>
