@@ -8,11 +8,17 @@ export type CabinClass =
     | "BUSINESS"
     | "FIRST";
 
-
 export interface PassengerCount {
     adult: number;
     child: number;
     infant: number;
+}
+
+export interface FlightFilters {
+    stops?: string[];
+    airlines?: string[];
+    departureTime?: string[];
+    arrivalTime?: string[];
 }
 
 export interface FlightSearchRequest {
@@ -28,30 +34,29 @@ export interface FlightSearchRequest {
     flexibleDates: boolean;
     directFlightsOnly: boolean;
 
-    filters?: {
-        stops?: string[];
-        airlines?: string[];
-        departureTime?: string[];
-        arrivalTime?: string[];
-    };
+    filters?: FlightFilters;
 }
 
 export interface Flight {
     id: string;
+
     airline: {
         code: string;
         name: string;
     };
+
     departure: {
         airportId: string;
         airportCode: string;
         dateTime: string;
     };
+
     arrival: {
         airportId: string;
         airportCode: string;
         dateTime: string;
     };
+
     durationMinutes: number;
     stops: number;
     price: number;
@@ -60,8 +65,10 @@ export interface Flight {
 
 export interface FlightSearchResponse {
     success: boolean;
+
     data: {
         tripType: TripType;
+
         departure: {
             id: string;
             code: string;
@@ -69,6 +76,7 @@ export interface FlightSearchResponse {
             city: string;
             country: string;
         };
+
         arrival: {
             id: string;
             code: string;
@@ -76,10 +84,22 @@ export interface FlightSearchResponse {
             city: string;
             country: string;
         };
+
         departureDate: string;
+
         results: Flight[];
+
         meta: {
             total: number;
+
+            facets: {
+                airlines: {
+                    code: string;
+                    name: string;
+                }[];
+
+                stops: string[];
+            };
         };
     };
 }
@@ -87,10 +107,11 @@ export interface FlightSearchResponse {
 export async function searchFlights(
     payload: FlightSearchRequest
 ): Promise<FlightSearchResponse["data"]> {
-    const response = await api.post<FlightSearchResponse>(
-        "/user/airports/search-flights",
-        payload
-    );
+    const response =
+        await api.post<FlightSearchResponse>(
+            "/user/airports/search-flights",
+            payload
+        );
 
     return response.data.data;
 }

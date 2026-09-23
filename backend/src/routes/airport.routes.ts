@@ -142,7 +142,8 @@ router.post("/search-flights", (req, res, next) => {
             );
         }
 
-        let result = flights.filter((flight) => {
+        // Base result for the selected route and date.
+        const baseResults = flights.filter((flight) => {
             return (
                 flight.departure.airportId === departureAirportId &&
                 flight.arrival.airportId === arrivalAirportId &&
@@ -150,20 +151,60 @@ router.post("/search-flights", (req, res, next) => {
             );
         });
 
+        // Facets are calculated before filters so the UI
+        // can continue to display all available filter options.
+        const airlineMap = new Map<
+            string,
+            { code: string; name: string }
+        >();
+
+        const stopsSet = new Set<string>();
+
+        baseResults.forEach((flight) => {
+            airlineMap.set(
+                flight.airline.code,
+                flight.airline
+            );
+
+            const stopLabel =
+                flight.stops === 0
+                    ? "Non-Stop"
+                    : flight.stops === 1
+                        ? "One Stop"
+                        : `${flight.stops} Stops`;
+
+            stopsSet.add(stopLabel);
+        });
+
+        const facets = {
+            airlines: Array.from(airlineMap.values()),
+            stops: Array.from(stopsSet),
+        };
+
+        let result = [...baseResults];
+
         if (directFlightsOnly) {
-            result = result.filter((flight) => flight.stops === 0);
+            result = result.filter(
+                (flight) => flight.stops === 0
+            );
         }
 
         if (filters?.airlines?.length) {
             result = result.filter((flight) =>
-                filters.airlines!.includes(flight.airline.code)
+                filters.airlines!.includes(
+                    flight.airline.code
+                )
             );
         }
 
         if (filters?.stops?.length) {
             result = result.filter((flight) => {
                 const stopLabel =
-                    flight.stops === 0 ? "Non-Stop" : "One Stop";
+                    flight.stops === 0
+                        ? "Non-Stop"
+                        : flight.stops === 1
+                            ? "One Stop"
+                            : `${flight.stops} Stops`;
 
                 return filters.stops!.includes(stopLabel);
             });
@@ -179,6 +220,7 @@ router.post("/search-flights", (req, res, next) => {
                 results: result,
                 meta: {
                     total: result.length,
+                    facets,
                 },
             },
         });

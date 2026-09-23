@@ -1,4 +1,7 @@
-import { useQuery } from "@tanstack/react-query";
+import {
+    keepPreviousData,
+    useQuery,
+} from "@tanstack/react-query";
 
 import {
     searchFlights,
@@ -13,7 +16,9 @@ export function useFlightSearch(
 
         queryFn: () => {
             if (!payload) {
-                throw new Error("Flight search request is missing.");
+                throw new Error(
+                    "Flight search request is missing."
+                );
             }
 
             return searchFlights(payload);
@@ -22,6 +27,8 @@ export function useFlightSearch(
         enabled: payload !== null,
 
         staleTime: 60 * 1000,
+
+        placeholderData: keepPreviousData,
 
         refetchOnWindowFocus: false,
     });
