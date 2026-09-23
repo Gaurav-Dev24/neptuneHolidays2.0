@@ -184,7 +184,7 @@ export default function Header() {
                             const Icon = item.icon;
                             const isActive =
                                 item.href === "/"
-                                    ? pathname === "/"
+                                    ? pathname === "/" || pathname.startsWith("/flights")
                                     : pathname.startsWith(item.href);
 
                             return (
@@ -279,7 +279,7 @@ export default function Header() {
                                         const Icon = item.icon;
                                         const isActive =
                                             item.href === "/"
-                                                ? pathname === "/"
+                                                ? pathname === "/" || pathname.startsWith("/flights")
                                                 : pathname.startsWith(item.href);
 
                                         return (
