@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import Header from "@/components/Header";
 import Providers from "./providers";
 import "./globals.css";
 
@@ -14,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Dev Holidays",
-  description: "Travel booking platform",
+  title: "Neptune Holidays — Find & Book Flights, Hotels & Tours",
+  description: "Modern travel booking and operations platform powered by Neptune API",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -24,8 +25,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
-        <Providers>{children}</Providers>
+      <body className="min-h-full flex flex-col font-sans">
+        <Providers>
+          <Header />
+          <div className="flex-1">{children}</div>
+        </Providers>
       </body>
     </html>
   );

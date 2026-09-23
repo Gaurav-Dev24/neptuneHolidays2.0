@@ -1186,42 +1186,191 @@ These are intentionally future milestones, not completed skills:
 
 ---
 
-# 22. Next Milestone
+# 22. Milestone 13 — Flight Results 2.0
 
-## Flight Results 2.0
+**Status: Complete — 2026-09-23**
 
-Planned features:
+## What we built
+
+The flight results screen was upgraded from a basic result list into a more production-style search-results experience.
 
 ```text
-Flight Results
+Flight Results 2.0
 ├── Result count
 ├── Sort by price
 ├── Sort by duration
-├── Sort by departure time
 ├── Stops filter
 ├── Airline filter
+├── Clear-all filters
 ├── Loading skeleton
-├── Empty state
 ├── Error + retry
-└── Responsive mobile filter UI
+├── Empty state
+├── isFetching update state
+└── Responsive filter UI
+```
+
+## Backend changes
+
+The local `POST /search-flights` route was enhanced to return filter facets along with the result list.
+
+```text
+meta
+├── total
+└── facets
+    ├── airlines
+    │   ├── code
+    │   └── name
+    └── stops
+```
+
+Facets are calculated from the base result set before applying the selected filters. This prevents available filter options from disappearing after a filter is selected.
+
+The local API also supports:
+
+- `directFlightsOnly`
+- `filters.airlines`
+- `filters.stops`
+
+This keeps production API data isolated while giving the frontend enough local data to exercise realistic filter behavior.
+
+## Frontend implementation
+
+### `FlightFilters.tsx`
+
+Created a reusable controlled filter component.
+
+Responsibilities:
+
+- Receive current filter state from the parent
+- Toggle stop selections
+- Toggle airline selections
+- Display dynamic facets returned by the API
+- Clear all selected filters
+
+Important TypeScript lesson:
+
+```ts
+const current = filters.stops ?? [];
+
+const next = current.includes(stop)
+  ? current.filter((item) => item !== stop)
+  : [...current, stop];
+```
+
+Because `filters.stops` is typed as `string[]`, TypeScript can infer `item` as `string`; an explicit `any` or `string` annotation is not required.
+
+### `FlightResults.tsx`
+
+The results component now handles:
+
+- Result count
+- Sorting
+- Filter controls
+- Loading state
+- Fetching/update state
+- Error state with retry
+- Empty results
+- Responsive mobile filter interaction
+- Flight cards
+
+Sorting is derived from the current result collection instead of creating additional server state.
+
+### `use-flight-search.ts`
+
+TanStack Query now uses:
+
+```ts
+placeholderData: keepPreviousData,
+staleTime: 60 * 1000,
+refetchOnWindowFocus: false,
+```
+
+This introduced the distinction between:
+
+- `isLoading` — initial request with no previous data
+- `isFetching` — any active background/request fetch
+
+`keepPreviousData` lets the previous results remain visible while a new filtered request is loading.
+
+## Important learning: local fixture data
+
+The number of displayed flights depends on the records currently stored in:
+
+```text
+backend/src/data/flights.ts
+```
+
+Manually adding or modifying local flight records can therefore produce multiple matching combinations/results. This is expected behavior for development fixtures and is useful for testing filtering and sorting.
+
+The important validation is that every returned flight still matches the requested route/date and active filter criteria.
+
+## Interview-ready explanation
+
+> “I built a local flight-results experience where the frontend submits a search payload through TanStack Query and Axios to a local Express API. The API returns both matching flights and filter facets. The UI keeps filter state in the page component, passes it to a reusable filter component, and sends the selected filters back as part of the query payload. I used `keepPreviousData` so existing results remain visible while a new filtered request is fetching, and I separated initial loading from subsequent fetching.”
+
+## Interview questions from this milestone
+
+### Q1. Why calculate facets before applying filters?
+
+Because filter options should describe the available options in the base result set. If facets were calculated after filtering, selecting one filter could incorrectly remove other useful filter options from the sidebar.
+
+### Q2. What is the difference between `isLoading` and `isFetching` in TanStack Query?
+
+`isLoading` represents the initial loading state when there is no usable query data. `isFetching` indicates that a request is currently in progress, including refetches when previous data already exists.
+
+### Q3. Why use `keepPreviousData`?
+
+It prevents the UI from becoming blank during a query-key change. Previous results remain visible while the new request is being fetched, creating a smoother search/filter experience.
+
+### Q4. Should sorting be client-side or server-side?
+
+For the current local dataset, client-side sorting is appropriate because the result set is already loaded in the browser. For very large datasets or paginated production results, server-side sorting is usually more scalable.
+
+### Q5. Where should filter state live?
+
+The page component owns the filter state because it needs that state both for the filter UI and for constructing the API query payload. `FlightFilters` remains a controlled, reusable presentation/input component.
+
+### Q6. Why avoid `any` in the filter callbacks?
+
+The filter arrays are explicitly typed as `string[]`, allowing TypeScript to infer callback parameters correctly and preserving compile-time safety.
+
+## Skills demonstrated
+
+- React state management
+- TypeScript interfaces and inference
+- TanStack Query server-state management
+- Query-key-driven refetching
+- Axios API integration
+- Client-side sorting
+- API-driven filter facets
+- Controlled reusable components
+- Loading/error/empty UI states
+- Responsive frontend UI design
+- Local API development and test fixtures
+
+## Next milestone
+
+# 23. Milestone 14 — URL-Driven Flight Search State
+
+Target URL example:
+
+```text
+/flights?from=ccu&to=del&date=2026-10-10&tripType=oneWay&adults=1
 ```
 
 ### Concepts to learn
 
-- Derived state
-- Filter state
-- Sorting
-- Query payload construction
-- TanStack Query keys
-- Memoization
-- Reusable filter components
-- Responsive filter UI
-- URL search parameters
-- Client vs server state separation
+- Next.js URL search parameters
+- `useSearchParams`
+- `useRouter`
+- Shareable/searchable URLs
+- Browser back/forward navigation
+- Synchronizing URL state with React state
+- Server/client boundaries in Next.js
 
 ---
 
-# 23. How to Use This File During Interviews
+# 24. How to Use This File During Interviews
 
 For every major project feature, be able to explain:
 
@@ -1257,7 +1406,7 @@ Why was this architecture chosen instead of another approach?
 
 ---
 
-# 24. Milestone Update Log
+# 25. Milestone Update Log
 
 | Date | Milestone | Status | Notes |
 |---|---|---|---|
@@ -1274,10 +1423,11 @@ Why was this architecture chosen instead of another approach?
 | 2026-09-22 | Dependent arrival query | Complete | Arrival depends on departure |
 | 2026-09-22 | Flight search form | Complete | RHF + Zod |
 | 2026-09-22 | End-to-end flight search | Complete | Search payload and results working |
+| 2026-09-23 | Flight Results 2.0 | Complete | Filters, sorting, facets, loading/error/empty states, responsive UI |
 
 ---
 
-# 25. Update Instructions for Future Milestones
+# 26. Update Instructions for Future Milestones
 
 After each completed milestone, add:
 
