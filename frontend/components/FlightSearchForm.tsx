@@ -62,8 +62,11 @@ const flightSearchSchema = z.object({
 
 type FlightSearchFormValues = z.infer<typeof flightSearchSchema>;
 
+import { useAllAirports } from "@/lib/use-all-airports";
+
 interface FlightSearchFormProps {
     onSearch: (payload: FlightSearchRequest) => void;
+    initialRequest?: FlightSearchRequest | null;
 }
 
 const CABIN_CLASS_LABELS: Record<CabinClass, string> = {
@@ -75,6 +78,7 @@ const CABIN_CLASS_LABELS: Record<CabinClass, string> = {
 
 export default function FlightSearchForm({
     onSearch,
+    initialRequest = null,
 }: FlightSearchFormProps) {
     const [departureAirport, setDepartureAirport] =
         useState<Airport | null>(null);
@@ -87,24 +91,58 @@ export default function FlightSearchForm({
 
     const passengerDropdownRef = useRef<HTMLDivElement>(null);
 
+    const { data: allAirports = [] } = useAllAirports();
+
     const {
         register,
         handleSubmit,
         watch,
         setValue,
+        reset,
         formState: { errors },
     } = useForm<FlightSearchFormValues>({
         resolver: zodResolver(flightSearchSchema),
         defaultValues: {
-            tripType: "oneWay",
-            adult: 1,
-            child: 0,
-            infant: 0,
-            cabinClass: "ECONOMY",
-            departureDate: "",
-            returnDate: "",
+            tripType: initialRequest?.tripType ?? "oneWay",
+            adult: initialRequest?.passengers.adult ?? 1,
+            child: initialRequest?.passengers.child ?? 0,
+            infant: initialRequest?.passengers.infant ?? 0,
+            cabinClass: initialRequest?.cabinClass ?? "ECONOMY",
+            departureDate: initialRequest?.departureDate ?? "",
+            returnDate: initialRequest?.returnDate ?? "",
         },
     });
+
+    // Synchronize form when initialRequest or airport list changes
+    useEffect(() => {
+        if (!initialRequest) return;
+
+        reset({
+            tripType: initialRequest.tripType,
+            adult: initialRequest.passengers.adult,
+            child: initialRequest.passengers.child,
+            infant: initialRequest.passengers.infant,
+            cabinClass: initialRequest.cabinClass,
+            departureDate: initialRequest.departureDate,
+            returnDate: initialRequest.returnDate ?? "",
+        });
+
+        if (allAirports.length > 0) {
+            const dep = allAirports.find(
+                (a) =>
+                    a.id.toLowerCase() ===
+                    initialRequest.departureAirportId.toLowerCase()
+            );
+            if (dep) setDepartureAirport(dep);
+
+            const arr = allAirports.find(
+                (a) =>
+                    a.id.toLowerCase() ===
+                    initialRequest.arrivalAirportId.toLowerCase()
+            );
+            if (arr) setArrivalAirport(arr);
+        }
+    }, [initialRequest, allAirports, reset]);
 
     const tripType = watch("tripType");
     const adultCount = watch("adult");

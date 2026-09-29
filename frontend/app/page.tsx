@@ -1,54 +1,24 @@
 "use client";
 
-import { useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { CheckCircle2, Sparkles } from "lucide-react";
 
 import FlightSearchForm from "@/components/FlightSearchForm";
-import FlightResults from "@/components/FlightResults";
 import PromoBanner from "@/components/PromoBanner";
 import TrendingDestinations from "@/components/TrendingDestinations";
 import WhyChooseUs from "@/components/WhyChooseUs";
 
-import {
-  type FlightFilters,
-  type FlightSearchRequest,
-} from "@/lib/flight-api";
-
-import { useFlightSearch } from "@/lib/use-flight-search";
-
-const emptyFilters: FlightFilters = {
-  stops: [],
-  airlines: [],
-};
+import { type FlightSearchRequest } from "@/lib/flight-api";
+import { buildFlightSearchUrl } from "@/lib/flight-url-params";
 
 export default function Home() {
-  const [searchPayload, setSearchPayload] =
-    useState<FlightSearchRequest | null>(null);
-
-  const [filters, setFilters] =
-    useState<FlightFilters>(emptyFilters);
+  const router = useRouter();
 
   function handleSearch(payload: FlightSearchRequest) {
-    setFilters(emptyFilters);
-    setSearchPayload(payload);
+    const targetUrl = buildFlightSearchUrl(payload);
+    router.push(targetUrl);
   }
-
-  const requestPayload =
-    searchPayload !== null
-      ? {
-        ...searchPayload,
-        filters,
-      }
-      : null;
-
-  const {
-    data,
-    isLoading,
-    isFetching,
-    isError,
-    refetch,
-  } = useFlightSearch(requestPayload);
 
   return (
     <main className="min-h-screen bg-[#FAF9F6]">
@@ -109,23 +79,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Main Container for Results & Production Features */}
+      {/* Main Container for Marketing & Features */}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mt-8 sm:mt-12">
-        {/* Flight Search Results Section */}
-        {searchPayload && (
-          <div className="mb-16">
-            <FlightResults
-              data={data}
-              isLoading={isLoading}
-              isFetching={isFetching}
-              isError={isError}
-              filters={filters}
-              onFiltersChange={setFilters}
-              onRetry={() => refetch()}
-            />
-          </div>
-        )}
-
         {/* Special Promo Coupon Strip */}
         <PromoBanner />
 
